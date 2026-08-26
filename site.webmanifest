@@ -4,8 +4,8 @@
   "description": "Wedding, portrait and brand photography studio in Toronto, Ontario.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#faf7f2",
-  "theme_color": "#171512",
+  "background_color": "#fafafa",
+  "theme_color": "#0d0d0d",
   "lang": "en-CA",
   "icons": [
     { "src": "/assets/img/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
