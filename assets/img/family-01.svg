@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1067" width="1600" height="1067" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="59.8%" y1="99.0%" x2="40.2%" y2="1.0%">
+      <stop offset="0%" stop-color="#e6ded2"/>
+      <stop offset="100%" stop-color="#c3b5a1"/>
+    </linearGradient>
+    <filter id="soft" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="120"/>
+    </filter>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+    <radialGradient id="vig" cx="50%" cy="50%" r="75%">
+      <stop offset="55%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0.42"/>
+    </radialGradient>
+  </defs>
+  <rect width="1600" height="1067" fill="url(#g)"/>
+  <g filter="url(#soft)"><ellipse cx="593" cy="30" rx="740" ry="694" transform="rotate(127 593 30)" fill="#fdfbf7" opacity="0.45"/><ellipse cx="27" cy="309" rx="986" ry="611" transform="rotate(34 27 309)" fill="#7d6a52" opacity="0.63"/><ellipse cx="869" cy="251" rx="852" ry="680" transform="rotate(143 869 251)" fill="#dccfbb" opacity="0.48"/></g>
+  <rect width="1600" height="1067" filter="url(#grain)" opacity="0.10" style="mix-blend-mode:overlay"/>
+  <rect width="1600" height="1067" fill="url(#vig)"/>
+</svg>
