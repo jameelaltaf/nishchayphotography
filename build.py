@@ -116,6 +116,7 @@ def main():
     base = read(os.path.join(PARTIALS, "base.html"))
     header = read(os.path.join(PARTIALS, "header.html"))
     footer = read(os.path.join(PARTIALS, "footer.html"))
+    widgets = read(os.path.join(PARTIALS, "widgets.html"))
 
     outputs = []
     for filename in sorted(os.listdir(PAGES)):
@@ -138,6 +139,7 @@ def main():
                 "jsonld": meta.get("jsonld", ""),
                 "header": header,
                 "footer": footer,
+                "widgets": widgets,
                 "content": body,
                 "marker": GENERATED_MARKER,
             },

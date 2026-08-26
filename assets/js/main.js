@@ -370,6 +370,127 @@
     }
   })();
 
+  /* ------------------------------------------------- studio assistant ---- */
+  (function assistant() {
+    var toggle = document.querySelector('[data-chat-toggle]');
+    var panel = document.querySelector('[data-chat-panel]');
+    if (!toggle || !panel) return;
+
+    var log = panel.querySelector('[data-chat-log]');
+    var replies = panel.querySelector('[data-chat-replies]');
+    var closeBtn = panel.querySelector('[data-chat-close]');
+    var label = toggle.querySelector('[data-chat-label]');
+
+    var WHATSAPP = 'https://wa.me/14165550142';
+
+    // Answers mirror the FAQ and pricing already published on the site. This
+    // is a lookup, not a live chat - nothing is sent anywhere, and every
+    // branch ends by handing off to a human rather than leaving a question
+    // sitting in a queue nobody is watching at a weekend wedding.
+    var TOPICS = {
+      start: {
+        reply: '<p>Hello. I can answer the common questions straight away &mdash; pricing, availability, turnaround and what is included.</p><p>What would be useful?</p>',
+        next: ['pricing', 'availability', 'turnaround', 'travel', 'human']
+      },
+      pricing: {
+        label: 'What does it cost?',
+        reply: '<p>Wedding collections start at <strong>$4,200 CAD</strong> (6 hours, one photographer) and run to <strong>$9,800</strong> for multi-day, multi-event coverage. The most-booked collection is <strong>$6,400</strong> for a full 10-hour day with a second shooter.</p><p>Portrait sessions start at $450, family at $520, and commercial at $1,850 a day. All prices exclude HST.</p><p><a href="/services/">See the full breakdown &rarr;</a></p>',
+        next: ['included', 'availability', 'human']
+      },
+      availability: {
+        label: 'Is my date free?',
+        reply: '<p>I cannot see the live calendar, but the studio answers every enquiry within two business days with real availability.</p><p>Peak Saturdays (June, September, October) usually book 12&ndash;18 months out. Off-season and weekday dates are often open at three to six months.</p><p>Fastest route is to send the date directly.</p>',
+        next: ['human', 'pricing']
+      },
+      turnaround: {
+        label: 'When do we get photos?',
+        reply: '<p>A sneak peek of 20&ndash;30 images lands within <strong>48 hours</strong>. The complete wedding gallery arrives within <strong>six weeks</strong> &mdash; that is contractual, not aspirational.</p><p>Portrait and family sessions are delivered within two weeks. Albums take a further four to six weeks after you approve the layout.</p>',
+        next: ['included', 'human']
+      },
+      travel: {
+        label: 'Do you travel?',
+        reply: '<p>Travel within <strong>60 km of downtown Toronto</strong> is included in every wedding collection. Beyond that, mileage is charged at cost, plus accommodation if the day starts before 9am or ends after 10pm.</p><p>The studio regularly shoots Niagara, Muskoka, Prince Edward County and Ottawa, and takes on a few destination weddings a year.</p>',
+        next: ['pricing', 'human']
+      },
+      included: {
+        label: "What's included?",
+        reply: '<p>Every collection includes edited high-resolution images, a private online gallery with print ordering, and a personal print release so you can print and share freely.</p><p>The full-day and multi-event collections add a second photographer, a complimentary engagement session and a timeline planning call.</p><p>Raw files are not included &mdash; the edit is a substantial part of the work.</p>',
+        next: ['pricing', 'turnaround', 'human']
+      },
+      human: {
+        label: 'Talk to a person',
+        reply: '<p>Best move. Two options:</p><p><a href="' + WHATSAPP + '" target="_blank" rel="noopener">Message on WhatsApp</a> &mdash; usually the quickest reply.</p><p><a href="/contact/">Send a full enquiry</a> &mdash; include your date, venue and rough guest count and you will get availability plus a starting figure back within two business days.</p>',
+        next: ['pricing', 'turnaround']
+      }
+    };
+
+    function bubble(html, who) {
+      var el = document.createElement('div');
+      el.className = 'chat__msg chat__msg--' + who;
+      el.innerHTML = html;
+      log.appendChild(el);
+      // Wait for layout, then park a long answer at its first line rather
+      // than its last - scrolling to the bottom would open mid-sentence.
+      requestAnimationFrame(function () {
+        log.scrollTop = who === 'bot'
+          ? Math.max(0, el.offsetTop - 12)
+          : log.scrollHeight;
+      });
+    }
+
+    function offer(ids) {
+      replies.innerHTML = '';
+      (ids || []).forEach(function (id) {
+        var topic = TOPICS[id];
+        if (!topic || !topic.label) return;
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = topic.label;
+        btn.addEventListener('click', function () { ask(id); });
+        replies.appendChild(btn);
+      });
+    }
+
+    function ask(id) {
+      var topic = TOPICS[id];
+      if (!topic) return;
+      if (topic.label) bubble('<p>' + topic.label + '</p>', 'user');
+      replies.innerHTML = '';
+      // A beat before the reply, so the log reads as a conversation.
+      setTimeout(function () {
+        bubble(topic.reply, 'bot');
+        offer(topic.next);
+      }, reduceMotion ? 0 : 380);
+    }
+
+    var started = false;
+    function setOpen(open) {
+      toggle.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      if (label) label.textContent = open ? 'Close' : 'Ask a question';
+      if (open && !started) {
+        started = true;
+        bubble(TOPICS.start.reply, 'bot');
+        offer(TOPICS.start.next);
+      }
+      if (open) panel.querySelector('[data-chat-close]').focus();
+    }
+
+    toggle.addEventListener('click', function () {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+    closeBtn.addEventListener('click', function () {
+      setOpen(false);
+      toggle.focus();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+  })();
+
   /* ---------------------------------------------------------- misc details */
   (function misc() {
     var year = document.querySelector('[data-year]');

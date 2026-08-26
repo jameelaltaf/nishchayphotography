@@ -529,3 +529,104 @@ body.nav-open .site-header:not(.is-stuck) .nav__cta {
   .site-header, .site-footer__cta, .lightbox, .nav-toggle { display: none !important; }
   body { background: #fff; }
 }
+
+/* ---------- Floating widgets: WhatsApp + studio assistant ---------- */
+.widgets {
+  position: fixed;
+  right: clamp(1rem, 3vw, 1.75rem);
+  bottom: clamp(1rem, 3vw, 1.75rem);
+  z-index: 150;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 0.65rem;
+}
+
+.fab {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  padding: 0.7rem 1.1rem;
+  border: 1px solid var(--charcoal);
+  border-radius: 100px;
+  background: var(--charcoal); color: var(--ivory);
+  font-family: var(--font-body);
+  font-size: 0.72rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase;
+  text-decoration: none; cursor: pointer;
+  box-shadow: 0 10px 28px -14px rgba(0,0,0,0.6);
+  transition: background var(--speed) var(--ease), color var(--speed) var(--ease), transform 0.2s var(--ease);
+}
+.fab:hover { background: var(--ivory); color: var(--charcoal); transform: translateY(-2px); }
+.fab__icon { width: 20px; height: 20px; flex: none; }
+.fab__icon--close { display: none; }
+.fab--chat[aria-expanded="true"] .fab__icon--open { display: none; }
+.fab--chat[aria-expanded="true"] .fab__icon--close { display: block; }
+
+/* Below the small breakpoint the labels are dropped for circular buttons. */
+@media (max-width: 560px) {
+  .fab__label { display: none; }
+  .fab { padding: 0.85rem; }
+}
+
+.chat {
+  order: -1;                       /* panel sits above the launchers */
+  width: min(23rem, calc(100vw - 2rem));
+  max-height: min(34rem, calc(100vh - 7.5rem));
+  display: flex; flex-direction: column;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 24px 60px -28px rgba(0,0,0,0.55);
+  overflow: hidden;
+  animation: chatIn 0.28s var(--ease);
+}
+.chat[hidden] { display: none; }
+@keyframes chatIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.chat__head {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+  padding: 1rem 1.1rem;
+  background: var(--charcoal); color: var(--ivory);
+}
+.chat__title { margin: 0; font-family: var(--font-display); font-size: 1.1rem; }
+.chat__sub { margin: 0.15rem 0 0; font-size: 0.7rem; letter-spacing: 0.06em; color: #9a9a9a; }
+.chat__close {
+  background: none; border: 0; color: inherit; cursor: pointer;
+  font-size: 1.4rem; line-height: 1; padding: 0 0.15rem;
+}
+
+.chat__log {
+  position: relative;   /* offsetParent for scroll positioning */
+  flex: 1; min-height: 11rem; overflow-y: auto;
+  padding: 1.1rem; display: flex; flex-direction: column; gap: 0.75rem;
+  font-size: 0.9rem;
+}
+.chat__msg { max-width: 88%; padding: 0.7rem 0.9rem; border-radius: var(--radius); line-height: 1.55; }
+.chat__msg p { margin: 0; }
+.chat__msg p + p { margin-top: 0.6rem; }
+.chat__msg a { color: inherit; }
+.chat__msg--bot { background: var(--ivory); border: 1px solid var(--line); align-self: flex-start; }
+.chat__msg--user { background: var(--charcoal); color: var(--ivory); align-self: flex-end; }
+
+.chat__replies {
+  display: flex; flex-wrap: wrap; gap: 0.4rem;
+  padding: 0 1.1rem 1rem;
+}
+.chat__replies:empty { display: none; }
+.chat__replies button {
+  background: none; color: var(--ink);
+  border: 1px solid var(--line); border-radius: 100px;
+  padding: 0.45rem 0.85rem; cursor: pointer;
+  font-family: var(--font-body); font-size: 0.78rem;
+  transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
+}
+.chat__replies button:hover { border-color: var(--ink); background: var(--ivory); }
+
+.chat__foot {
+  display: flex; gap: 1.1rem;
+  padding: 0.75rem 1.1rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase;
+}
+.chat__foot a { text-decoration: none; color: var(--muted); }
+.chat__foot a:hover { color: var(--ink); }
+
+/* The lightbox (z-index 200) already paints over the stack (150); the mobile
+   drawer does not, so hide it there. */
+body.nav-open .widgets { display: none; }
+@media print { .widgets { display: none !important; } }

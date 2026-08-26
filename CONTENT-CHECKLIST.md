@@ -96,6 +96,14 @@ Every figure in `src/pages/services.html` is illustrative. Confirm all of them:
       or remove them.
 - [ ] **Analytics** — nothing is installed. If you add any, the privacy notice
       already describes anonymised analytics; keep the two consistent.
+- [ ] **WhatsApp number** — the floating WhatsApp button and the assistant's
+      hand-off links both point at `wa.me/14165550142`, which is the fictional
+      placeholder number. Replace it in `src/partials/widgets.html` (two links)
+      and in `assets/js/main.js` (the `WHATSAPP` constant).
+- [ ] **Assistant answers** — the studio assistant repeats the pricing,
+      turnaround and travel figures published on the services page. If you
+      change any of those numbers, update the `TOPICS` object in
+      `assets/js/main.js` to match, or the two will disagree.
 
 ## 8. Legal
 
