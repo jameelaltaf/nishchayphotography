@@ -1,0 +1,189 @@
+title: Contact & Check Your Date | Nishchay Photography, Toronto
+description: Check your date with a Toronto wedding and portrait photography studio. Send your date, venue and coverage - we reply within two business days.
+output: contact/index.html
+og_image: /assets/img/hero-03.svg
+---
+<section class="page-head">
+  <div class="wrap">
+    <ol class="breadcrumbs">
+      <li><a href="/">Home</a></li>
+      <li>Contact</li>
+    </ol>
+    <p class="eyebrow">Enquiries</p>
+    <h1 class="display">Tell us about the day.</h1>
+    <p class="lede">The more you give us here, the more useful our reply. We answer every enquiry within two business days with real availability, a starting investment and a suggested collection &mdash; not a brochure.</p>
+  </div>
+</section>
+
+<section class="section--tight">
+  <div class="wrap split split--wide-left" style="align-items:start;">
+
+    <form class="form" data-enquiry-form novalidate>
+      <!-- Wire this up: add an action="" endpoint (Formspree, Netlify Forms,
+           Basin, or your own handler). See README.md > Connecting the form. -->
+      <p class="form__status" data-form-status hidden role="status" aria-live="polite"></p>
+
+      <div class="form__row form__row--2">
+        <div class="field">
+          <label for="name">Your name <span class="req" aria-hidden="true">*</span></label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+          <p class="error" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="partner">Partner's name <span class="muted">(if applicable)</span></label>
+          <input id="partner" name="partner" type="text" autocomplete="off">
+        </div>
+      </div>
+
+      <div class="form__row form__row--2">
+        <div class="field">
+          <label for="email">Email <span class="req" aria-hidden="true">*</span></label>
+          <input id="email" name="email" type="email" autocomplete="email" required>
+          <p class="error" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="phone">Phone</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="(416) 555-0142">
+        </div>
+      </div>
+
+      <div class="form__row form__row--2">
+        <div class="field">
+          <label for="service">What are we photographing? <span class="req" aria-hidden="true">*</span></label>
+          <select id="service" name="service" required>
+            <option value="">Choose one…</option>
+            <option value="wedding">Wedding</option>
+            <option value="multi-event">Multi-event / South Asian wedding</option>
+            <option value="elopement">Elopement or micro-wedding</option>
+            <option value="engagement">Engagement / couples session</option>
+            <option value="portrait">Portrait, headshots or personal branding</option>
+            <option value="family">Family, maternity or newborn</option>
+            <option value="commercial">Brand or commercial</option>
+            <option value="other">Something else</option>
+          </select>
+          <p class="error" role="alert"></p>
+        </div>
+        <div class="field">
+          <label for="date">Date <span class="muted">(or best guess)</span></label>
+          <input id="date" name="date" type="date">
+          <p class="hint">Not locked in yet? Leave it blank and tell us the month below.</p>
+        </div>
+      </div>
+
+      <div class="form__row form__row--2">
+        <div class="field">
+          <label for="venue">Venue or location</label>
+          <input id="venue" name="venue" type="text" placeholder="e.g. Evergreen Brick Works, Toronto">
+        </div>
+        <div class="field">
+          <label for="guests">Approximate guest count</label>
+          <input id="guests" name="guests" type="number" min="0" step="1" inputmode="numeric" placeholder="e.g. 120">
+        </div>
+      </div>
+
+      <div class="form__row form__row--2">
+        <div class="field">
+          <label for="budget">Photography budget (CAD)</label>
+          <select id="budget" name="budget">
+            <option value="">Prefer not to say</option>
+            <option value="under-1000">Under $1,000</option>
+            <option value="1000-3000">$1,000 – $3,000</option>
+            <option value="3000-5000">$3,000 – $5,000</option>
+            <option value="5000-8000">$5,000 – $8,000</option>
+            <option value="8000-plus">$8,000+</option>
+          </select>
+          <p class="hint">Optional, and never used to push you upward &mdash; it just tells us which collection to talk about.</p>
+        </div>
+        <div class="field">
+          <label for="referral">How did you find us?</label>
+          <select id="referral" name="referral">
+            <option value="">Choose one…</option>
+            <option value="google">Google search</option>
+            <option value="instagram">Instagram</option>
+            <option value="referral-couple">A couple we photographed</option>
+            <option value="referral-vendor">Planner or venue referral</option>
+            <option value="publication">A blog or publication</option>
+            <option value="other">Somewhere else</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="message">Tell us about the day <span class="req" aria-hidden="true">*</span></label>
+        <textarea id="message" name="message" required placeholder="What's the shape of the day? What matters most to you in the photographs? Anything we should know?"></textarea>
+        <p class="error" role="alert"></p>
+      </div>
+
+      <div class="field field--check">
+        <input id="consent" name="consent" type="checkbox" required>
+        <label for="consent">I agree that Nishchay Photography may store the details in this form and contact me about my enquiry, in line with the <a href="/privacy/">privacy notice</a>. <span class="req" aria-hidden="true">*</span></label>
+      </div>
+
+      <div class="field field--check">
+        <input id="newsletter" name="newsletter" type="checkbox">
+        <label for="newsletter">Send me the occasional planning note and venue guide. No more than six emails a year.</label>
+      </div>
+
+      <!-- Honeypot: hidden from humans, irresistible to bots. -->
+      <div class="hp" aria-hidden="true">
+        <label for="company">Company</label>
+        <input id="company" name="company" type="text" tabindex="-1" autocomplete="off">
+      </div>
+
+      <div>
+        <button class="btn btn--lg" type="submit">Send enquiry</button>
+        <p class="note" style="margin-top:1rem;">We reply within two business days. If you haven't heard from us, check your spam folder before assuming we've ghosted you &mdash; then email us directly.</p>
+      </div>
+    </form>
+
+    <aside class="contact-aside">
+      <h3 class="mt-0">Prefer email?</h3>
+      <p class="muted">Skip the form entirely. Include your date, venue and rough guest count and you'll get the same reply.</p>
+      <dl>
+        <div><dt>Email</dt><dd><a href="mailto:hello@nishchayphotography.ca">hello@nishchayphotography.ca</a></dd></div>
+        <div><dt>Phone</dt><dd><a href="tel:+14165550142">(416) 555-0142</a></dd></div>
+        <div><dt>Studio</dt><dd>Liberty Village, Toronto, ON<br><span class="muted small">Visits by appointment</span></dd></div>
+        <div><dt>Hours</dt><dd>Monday to Friday, 9am&ndash;5pm ET<br><span class="muted small">Weekends we're usually shooting</span></dd></div>
+        <div><dt>Instagram</dt><dd><a href="https://www.instagram.com/nishchayphotography" rel="noopener" target="_blank">@nishchayphotography</a></dd></div>
+      </dl>
+
+      <hr style="margin:2rem 0;">
+
+      <h3>Already a client?</h3>
+      <p class="muted">Gallery links, print orders and album proofs live in the client area.</p>
+      <a class="btn btn--ghost btn--block" href="/client-galleries/">Client galleries</a>
+    </aside>
+  </div>
+</section>
+
+<section class="section section--dark">
+  <div class="wrap">
+    <div class="grid grid--3">
+      <div class="reveal">
+        <p class="eyebrow">Response time</p>
+        <h3>Two business days, every time</h3>
+        <p class="muted">If a wedding weekend has just happened, it might be the second day rather than the first.</p>
+      </div>
+      <div class="reveal" data-reveal-delay="100">
+        <p class="eyebrow">What you'll get back</p>
+        <h3>Availability and a real number</h3>
+        <p class="muted">Whether your date is open, which collection fits, and what it would cost including add-ons.</p>
+      </div>
+      <div class="reveal" data-reveal-delay="200">
+        <p class="eyebrow">No pressure</p>
+        <h3>We don't chase</h3>
+        <p class="muted">One reply, one gentle follow-up if we don't hear back. That's the entire sales process.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "name": "Contact Nishchay Photography",
+  "url": "https://www.nishchayphotography.ca/contact/",
+  "mainEntity": { "@id": "https://www.nishchayphotography.ca/#studio" }
+}
+</script>
