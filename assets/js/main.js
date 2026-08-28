@@ -370,6 +370,180 @@
     }
   })();
 
+  /* ---------------------------------------------------- 3D carousel ------ */
+  (function carousel3d() {
+    var root = document.querySelector('[data-carousel3d]');
+    if (!root) return;
+
+    var ring = root.querySelector('[data-carousel3d-ring]');
+    var faces = Array.prototype.slice.call(root.querySelectorAll('.carousel3d__face'));
+    var status = root.querySelector('[data-carousel3d-status]');
+    var prev = root.querySelector('[data-carousel3d-prev]');
+    var next = root.querySelector('[data-carousel3d-next]');
+    if (!ring || faces.length < 3) return;
+
+    var count = faces.length;
+    var step = 360 / count;
+    var angle = 0;             // current ring rotation, degrees
+    var velocity = 0;          // degrees per frame, from a drag throw
+    var target = null;         // set when stepping to a specific face
+    var dragging = false;
+    var paused = false;
+    var visible = false;
+    var frame = null;
+    var lastDim = 0;
+
+    // Radius that seats `count` faces of `faceWidth` edge-to-edge around a ring.
+    function layout() {
+      var faceWidth = ring.getBoundingClientRect().width;
+      // The bare trig seats faces edge-to-edge, which reads as one continuous
+      // wall; pushing the ring out leaves air between the photographs.
+      var radius = ((faceWidth / 2) / Math.tan(Math.PI / count)) * 1.42;
+      faces.forEach(function (face, i) {
+        face.style.transform = 'rotateY(' + (i * step) + 'deg) translateZ(' + radius + 'px)';
+      });
+    }
+
+    function frontIndex() {
+      return ((Math.round(-angle / step) % count) + count) % count;
+    }
+
+    function describe() {
+      if (!status) return;
+      var btn = faces[frontIndex()].querySelector('[data-caption]');
+      var caption = btn ? btn.getAttribute('data-caption') : '';
+      status.innerHTML = (frontIndex() + 1) + ' / ' + count +
+        (caption ? ' &mdash; ' + caption : '');
+    }
+
+    function render(now) {
+      ring.style.setProperty('--angle', angle.toFixed(2) + 'deg');
+      // Dim faces by how far they have turned from the front. Throttled, since
+      // filter recalculation on every face every frame is wasteful.
+      if (!now || now - lastDim > 80) {
+        lastDim = now || 0;
+        faces.forEach(function (face, i) {
+          var world = (i * step + angle) * Math.PI / 180;
+          var facing = (Math.cos(world) + 1) / 2;          // 1 at front, 0 at back
+          face.style.setProperty('--face-dim', (0.4 + facing * 0.6).toFixed(3));
+        });
+      }
+    }
+
+    function tick(now) {
+      frame = null;
+      if (target !== null) {
+        var delta = target - angle;
+        if (Math.abs(delta) < 0.05) { angle = target; target = null; describe(); }
+        else angle += delta * 0.14;
+      } else if (Math.abs(velocity) > 0.02) {
+        angle += velocity;
+        velocity *= 0.94;
+        if (Math.abs(velocity) <= 0.02) describe();
+      } else if (!paused && !dragging && visible && !reduceMotion) {
+        angle -= 0.08;                                     // idle drift
+      }
+      render(now);
+      schedule();
+    }
+
+    function schedule() {
+      var idle = target === null && Math.abs(velocity) <= 0.02;
+      var resting = idle && (paused || dragging || !visible || reduceMotion);
+      if (resting || frame) return;
+      frame = window.requestAnimationFrame(tick);
+    }
+
+    function goTo(index) {
+      target = -index * step;
+      velocity = 0;
+      if (reduceMotion) { angle = target; target = null; render(); describe(); return; }
+      schedule();
+    }
+
+    function stepBy(n) { goTo(frontIndex() + n); }
+
+    /* --- pointer drag ------------------------------------------------- */
+    var startX = 0, startAngle = 0, lastX = 0, moved = false;
+
+    ring.addEventListener('pointerdown', function (e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      dragging = true; moved = false;
+      startX = lastX = e.clientX;
+      startAngle = angle;
+      target = null; velocity = 0;
+      // Capture is deferred until the pointer actually moves: capturing on
+      // pointerdown retargets the click and swallows taps on a face.
+    });
+
+    ring.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - startX;
+      if (!moved && Math.abs(dx) > 4) {
+        moved = true;
+        ring.setPointerCapture(e.pointerId);
+      }
+      if (!moved) return;
+      angle = startAngle + dx * 0.25;
+      velocity = (e.clientX - lastX) * 0.25;
+      lastX = e.clientX;
+      render();
+    });
+
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      if (e && e.pointerId !== undefined && ring.hasPointerCapture(e.pointerId)) {
+        ring.releasePointerCapture(e.pointerId);
+      }
+      if (reduceMotion) { velocity = 0; goTo(frontIndex()); }
+      else schedule();
+    }
+    ring.addEventListener('pointerup', endDrag);
+    ring.addEventListener('pointercancel', endDrag);
+
+    // A drag that moved should not also open the lightbox on release.
+    ring.addEventListener('click', function (e) {
+      if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+    }, true);
+
+    /* --- keyboard, buttons, pausing ------------------------------------ */
+    ring.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { e.preventDefault(); stepBy(-1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); stepBy(1); }
+    });
+    if (prev) prev.addEventListener('click', function () { stepBy(-1); });
+    if (next) next.addEventListener('click', function () { stepBy(1); });
+
+    ['pointerenter', 'focusin'].forEach(function (evt) {
+      root.addEventListener(evt, function () { paused = true; });
+    });
+    ['pointerleave', 'focusout'].forEach(function (evt) {
+      root.addEventListener(evt, function () { paused = false; schedule(); });
+    });
+
+    // Only animate while the carousel is actually on screen.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        schedule();
+      }, { threshold: 0.15 }).observe(root);
+    } else {
+      visible = true;
+    }
+
+    var resizeTimer = null;
+    window.addEventListener('resize', function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(layout, 150);
+    });
+
+    layout();
+    render();
+    describe();
+    schedule();
+  })();
+
   /* ------------------------------------------------- studio assistant ---- */
   (function assistant() {
     var toggle = document.querySelector('[data-chat-toggle]');

@@ -160,24 +160,82 @@
       <p class="eyebrow">Selected work</p>
       <h2 class="display">Recent days, recent faces</h2>
     </div>
-    <div class="strip" style="margin-top:clamp(2.5rem,5vw,4rem);">
-      <figure class="figure reveal">
-        <img class="cover" src="/assets/img/wedding-02.svg" alt="Bride in soft window light before a Toronto ceremony" width="1067" height="1600" loading="lazy" decoding="async" style="aspect-ratio:2/3;">
-        <figcaption class="figure__caption">Distillery District &middot; Toronto</figcaption>
-      </figure>
-      <figure class="figure reveal" data-reveal-delay="100">
-        <img class="cover" src="/assets/img/engagement-02.svg" alt="Engaged couple walking a wooded trail at golden hour" width="1067" height="1600" loading="lazy" decoding="async" style="aspect-ratio:2/3;">
-        <figcaption class="figure__caption">Scarborough Bluffs &middot; Engagement</figcaption>
-      </figure>
-      <figure class="figure reveal" data-reveal-delay="200">
-        <img class="cover" src="/assets/img/portrait-01.svg" alt="Studio portrait lit with a single soft source against a dark backdrop" width="1067" height="1600" loading="lazy" decoding="async" style="aspect-ratio:2/3;">
-        <figcaption class="figure__caption">Studio &middot; Personal branding</figcaption>
-      </figure>
-      <figure class="figure reveal" data-reveal-delay="300">
-        <img class="cover" src="/assets/img/wedding-04.svg" alt="Wedding party laughing together in blush evening light" width="1067" height="1600" loading="lazy" decoding="async" style="aspect-ratio:2/3;">
-        <figcaption class="figure__caption">Niagara-on-the-Lake &middot; Wedding</figcaption>
-      </figure>
+    <div class="carousel3d" data-carousel3d style="margin-top:clamp(2rem,4vw,3rem);">
+      <div class="carousel3d__stage">
+        <div class="carousel3d__ring" data-carousel3d-ring
+             role="group" aria-roledescription="carousel" aria-label="Selected work, rotating showcase"
+             tabindex="0">
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/wedding-02.svg" data-caption="Distillery District &middot; Toronto">
+            <img src="/assets/img/wedding-02.svg" alt="Bride in soft window light before a Toronto ceremony" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/engagement-02.svg" data-caption="Scarborough Bluffs &middot; Engagement">
+            <img src="/assets/img/engagement-02.svg" alt="Engaged couple walking a wooded trail at golden hour" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/portrait-01.svg" data-caption="Studio &middot; Personal branding">
+            <img src="/assets/img/portrait-01.svg" alt="Studio portrait lit with a single soft source" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/wedding-04.svg" data-caption="Niagara-on-the-Lake &middot; Wedding">
+            <img src="/assets/img/wedding-04.svg" alt="Wedding party laughing together in evening light" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/family-02.svg" data-caption="Leslieville &middot; Family">
+            <img src="/assets/img/family-02.svg" alt="Parent and child photographed at home in daylight" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/wedding-05.svg" data-caption="Casa Loma &middot; Blue hour">
+            <img src="/assets/img/wedding-05.svg" alt="Couple photographed against a deep evening sky" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/commercial-03.svg" data-caption="Ossington &middot; Editorial">
+            <img src="/assets/img/commercial-03.svg" alt="Editorial interior photograph of a restaurant" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/portrait-03.svg" data-caption="Studio &middot; Maternity">
+            <img src="/assets/img/portrait-03.svg" alt="Maternity portrait in soft directional light" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/wedding-06.svg" data-caption="Mississauga &middot; Mehndi">
+            <img src="/assets/img/wedding-06.svg" alt="Detail of hands during a mehndi ceremony" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        <figure class="carousel3d__face">
+          <button class="carousel3d__btn" type="button" data-lightbox-item
+                  data-full="/assets/img/engagement-03.svg" data-caption="Prince Edward County &middot; Couples">
+            <img src="/assets/img/engagement-03.svg" alt="Couple in an open field under overcast light" width="1067" height="1600" loading="lazy" decoding="async">
+          </button>
+        </figure>
+        </div>
+      </div>
+
+      <div class="carousel3d__controls">
+        <button class="carousel3d__nav" type="button" data-carousel3d-prev aria-label="Previous photograph">&#8592;</button>
+        <p class="carousel3d__status" data-carousel3d-status role="status" aria-live="polite"></p>
+        <button class="carousel3d__nav" type="button" data-carousel3d-next aria-label="Next photograph">&#8594;</button>
+      </div>
+      <p class="note center carousel3d__hint">Drag to spin, or use the arrow keys. Select a frame to open it full size.</p>
     </div>
+
     <p class="center" style="margin-top:clamp(2.5rem,5vw,3.5rem);">
       <a class="btn btn--ghost" href="/portfolio/">See the full portfolio</a>
     </p>
@@ -455,6 +513,17 @@
     <p class="muted small">Prices shown in Canadian dollars and exclude HST. We respectfully acknowledge that we photograph on the traditional territory of many nations, including the Mississaugas of the Credit, the Anishnabeg, the Chippewa, the Haudenosaunee and the Wendat peoples.</p>
   </div>
 </footer>
+
+<dialog class="lightbox" data-lightbox aria-label="Image viewer">
+  <button class="lightbox__btn lightbox__close" type="button" data-lightbox-action="close" aria-label="Close image viewer">&times;</button>
+  <button class="lightbox__btn lightbox__prev" type="button" data-lightbox-action="prev" aria-label="Previous image">&#8592;</button>
+  <button class="lightbox__btn lightbox__next" type="button" data-lightbox-action="next" aria-label="Next image">&#8594;</button>
+  <figure class="lightbox__figure">
+    <img data-lightbox-img alt="">
+    <figcaption class="lightbox__caption" data-lightbox-caption></figcaption>
+  </figure>
+  <p class="lightbox__count" data-lightbox-count aria-live="polite"></p>
+</dialog>
 
 <!-- Floating contact stack: WhatsApp, then the assistant launcher. -->
 <div class="widgets" data-widgets>
