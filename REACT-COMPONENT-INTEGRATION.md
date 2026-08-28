@@ -1,6 +1,8 @@
-# Integrating the 3D carousel React component
+# Integrating the supplied React components
 
-Answering the integration brief for `3d-carousel.tsx` against this repository.
+Answering the integration briefs for `3d-carousel.tsx` and
+`3d-gallery-photography.tsx` against this repository. Section 1 applies to
+both; the answer has not changed between them.
 
 ## 1. Does the codebase support it? No.
 
@@ -11,6 +13,7 @@ Answering the integration brief for `3d-carousel.tsx` against this repository.
 | TypeScript | Absent — no `tsconfig.json`, no `.ts`/`.tsx` files |
 | React | Absent — no `package.json`, no node_modules, no bundler |
 | framer-motion | Absent |
+| three, @react-three/fiber, @react-three/drei | Absent |
 
 This is a static site: HTML, one CSS file, one vanilla JS file, assembled by a
 stdlib-only Python script. There is no npm install step and nothing to build.
@@ -56,7 +59,8 @@ cd nishchay-web
 npx shadcn@latest init
 
 # 3. The component's only runtime dependency
-npm install framer-motion
+npm install framer-motion                       # for 3d-carousel
+npm install three @react-three/fiber @react-three/drei   # for 3d-gallery-photography
 ```
 
 Then create `components/ui/3d-carousel.tsx` and paste the component in.
@@ -108,6 +112,61 @@ and it addresses the gaps above:
 - Only animates while on screen (IntersectionObserver) and while not hovered
 - Falls back to a horizontally scrollable row with no JavaScript
 - Selecting a frame opens the existing shared lightbox
+
+## 4b. Review of `3d-gallery-photography.tsx`
+
+WebGL rather than CSS, so the review is separate:
+
+- **The wheel handler calls `preventDefault()`, trapping page scroll.** Once the
+  canvas is under the cursor the visitor cannot scroll past the gallery. It also
+  binds to `document.querySelector('canvas')` — the *first* canvas on the page,
+  not necessarily this one.
+- **Arrow keys are bound to `document`.** They are hijacked page-wide, which
+  breaks ordinary keyboard scrolling everywhere on the page, not just here.
+- **`setScrollVelocity` is called inside `useFrame`.** A state setter every
+  frame forces a React re-render every frame. That is also the only reason the
+  planes appear to move at all: `useFrame` mutates `planesData.current` but
+  never writes to the meshes, so positions only update because the whole
+  component re-renders. Velocity belongs in a ref, and positions should be
+  written to `mesh.position` directly.
+- **`useTexture` suspends, and the demo has no `<Suspense>` boundary**, so it
+  throws on first render.
+- **`speed`, `zSpacing`, `visibleCount` and `falloff` are accepted but never
+  forwarded** from the default export to `GalleryScene`. Every prop the demo
+  passes is silently ignored.
+- **`textureSize()` is GLSL ES 3.00.** It fails to compile on a WebGL1 context,
+  and the WebGL check in the component only tests for `webgl`, not `webgl2`.
+- **The camera sits at `z = 0` inside the plane field**, so roughly half the
+  planes are behind it and still processed each frame.
+- **No `prefers-reduced-motion` handling**; autoplay always runs.
+- `const worldZ` is declared and unused inside `useFrame`.
+
+## 5. What was built instead
+
+### Depth gallery (portfolio page)
+
+An infinite corridor of photographs in CSS 3D — perspective does the scaling,
+and depth drives opacity, blur and brightness so frames resolve as they
+approach. Categories for weddings, newborn & family, portraits and brand, with
+short sets repeated so the corridor stays full.
+
+It differs from the component above where that component is wrong:
+
+- **Page scroll is never hijacked.** Motion comes from drift, drag, buttons and
+  arrow keys, and arrow keys are bound to the stage, not to `document`.
+- **Drift pauses on hover and focus**, otherwise frames are a moving target and
+  cannot reliably be clicked.
+- Positions are written straight to the elements in one rAF loop; there is no
+  per-frame re-render.
+- Runs only while on screen, and blur is quantised so the filter is not rebuilt
+  every frame.
+- Static under `prefers-reduced-motion`.
+- The source list stays in the DOM as an ordinary grid, so the section works
+  with no JavaScript.
+- Selecting a frame opens the shared lightbox.
+
+The one thing genuinely lost is the cloth/flag vertex shader. That needs WebGL,
+and it is a subtle ripple most visitors would never notice.
 
 ### Other 3D effects, same approach
 

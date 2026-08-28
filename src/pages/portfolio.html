@@ -15,6 +15,103 @@ og_image: /assets/img/wedding-01.svg
   </div>
 </section>
 
+<section class="section--tight depth-section">
+  <div class="wrap">
+    <div class="center" style="max-width:56ch;margin-inline:auto;">
+      <p class="eyebrow">The 3D room</p>
+      <h2 class="display">Walk through the work</h2>
+      <p class="lede" style="margin-inline:auto;">Selected frames from weddings, newborn and family sessions, portraits and brand work &mdash; arranged in depth. Pick a collection, then drag or use the arrow keys to move through it.</p>
+    </div>
+
+    <div class="depth" data-depth>
+      <div class="filters depth__tabs" data-depth-tabs role="group" aria-label="Choose a collection">
+        <button type="button" data-depth-cat="all" aria-pressed="true">All work</button>
+        <button type="button" data-depth-cat="weddings" aria-pressed="false">Weddings</button>
+        <button type="button" data-depth-cat="newborn" aria-pressed="false">Newborn &amp; family</button>
+        <button type="button" data-depth-cat="portraits" aria-pressed="false">Portraits</button>
+        <button type="button" data-depth-cat="brand" aria-pressed="false">Brand</button>
+      </div>
+
+      <div class="depth__stage" data-depth-stage tabindex="0"
+           role="group" aria-roledescription="3D gallery"
+           aria-label="Photographs arranged in depth. Drag, or use the arrow keys, to move through them.">
+        <div class="depth__field" data-depth-field aria-hidden="true"></div>
+      </div>
+
+      <div class="carousel3d__controls">
+        <button class="carousel3d__nav" type="button" data-depth-prev aria-label="Move back through the gallery">&#8593;</button>
+        <p class="carousel3d__status" data-depth-status role="status" aria-live="polite"></p>
+        <button class="carousel3d__nav" type="button" data-depth-next aria-label="Move forward through the gallery">&#8595;</button>
+      </div>
+
+      <!-- The source list. JS builds the 3D field from it; without JS it stays
+           on the page as an ordinary responsive grid. -->
+      <ul class="depth__source" data-depth-source>
+        <li data-category="weddings" data-caption="Ceremony &middot; Distillery District">
+          <img src="/assets/img/wedding-01.svg" alt="Ceremony photographed from the back of the aisle" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="weddings" data-caption="Getting ready &middot; King West">
+          <img src="/assets/img/wedding-02.svg" alt="Bride in soft window light during preparations" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="weddings" data-caption="Reception &middot; Evergreen Brick Works">
+          <img src="/assets/img/wedding-03.svg" alt="Guests dancing under warm reception lighting" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="weddings" data-caption="Wedding party &middot; Niagara-on-the-Lake">
+          <img src="/assets/img/wedding-04.svg" alt="Wedding party laughing together in evening light" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="weddings" data-caption="Blue hour &middot; Casa Loma">
+          <img src="/assets/img/wedding-05.svg" alt="Couple photographed against a deep evening sky" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="weddings" data-caption="Mehndi &middot; Mississauga">
+          <img src="/assets/img/wedding-06.svg" alt="Detail of hands during a mehndi ceremony" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="weddings" data-caption="Outdoor ceremony &middot; Muskoka">
+          <img src="/assets/img/hero-02.svg" alt="Outdoor ceremony surrounded by evergreens" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="weddings" data-caption="Engagement &middot; Scarborough Bluffs">
+          <img src="/assets/img/engagement-01.svg" alt="Couple close together at golden hour" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="weddings" data-caption="Engagement &middot; Rouge Valley">
+          <img src="/assets/img/engagement-02.svg" alt="Engaged couple walking a wooded trail" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="weddings" data-caption="Couples &middot; Prince Edward County">
+          <img src="/assets/img/engagement-03.svg" alt="Couple in an open field under overcast light" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="newborn" data-caption="Family &middot; High Park">
+          <img src="/assets/img/family-01.svg" alt="Family together in soft outdoor light" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="newborn" data-caption="At home &middot; Leslieville">
+          <img src="/assets/img/family-02.svg" alt="Parent and child photographed at home in daylight" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="newborn" data-caption="Newborn &middot; Etobicoke">
+          <img src="/assets/img/family-03.svg" alt="Newborn photographed in soft window light" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="portraits" data-caption="Personal branding &middot; Studio">
+          <img src="/assets/img/portrait-01.svg" alt="Studio portrait lit with a single soft source" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="portraits" data-caption="Graduation &middot; University of Toronto">
+          <img src="/assets/img/portrait-02.svg" alt="Graduation portrait in bright natural light" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="portraits" data-caption="Maternity &middot; Studio">
+          <img src="/assets/img/portrait-03.svg" alt="Maternity portrait in soft directional light" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="portraits" data-caption="Headshots &middot; On location">
+          <img src="/assets/img/portrait-04.svg" alt="Natural-light headshot against a neutral wall" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="brand" data-caption="Brand library &middot; Hospitality">
+          <img src="/assets/img/commercial-01.svg" alt="Product styling photographed on a grey surface" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="brand" data-caption="Team headshots &middot; Financial District">
+          <img src="/assets/img/commercial-02.svg" alt="Corporate team headshot on a neutral background" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+        <li data-category="brand" data-caption="Editorial &middot; Ossington">
+          <img src="/assets/img/commercial-03.svg" alt="Editorial interior photograph of a restaurant" width="1067" height="1600" loading="lazy" decoding="async">
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <section class="section--tight">
   <div class="wrap">
     <div class="filters" data-filters role="group" aria-label="Filter portfolio by category">

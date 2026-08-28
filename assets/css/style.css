@@ -748,3 +748,77 @@ html:not(.js) .carousel3d__controls, html:not(.js) .carousel3d__hint { display: 
   .js .card.reveal, .js .package.reveal, .js .figure.reveal { transform: none; }
   .hero__media { transform: none; }
 }
+
+/* ---------- Depth gallery -------------------------------------------------
+   An infinite corridor of photographs receding into the distance. CSS 3D
+   rather than WebGL: perspective handles the scaling, and depth drives
+   opacity and blur so frames resolve as they approach.
+   -------------------------------------------------------------------------- */
+.depth { margin-top: clamp(2rem, 4vw, 3rem); }
+.depth__tabs { margin-bottom: clamp(1.5rem, 3vw, 2rem); }
+
+.depth__stage {
+  position: relative;
+  height: clamp(24rem, 62vh, 38rem);
+  perspective: 700px;          /* short, for pronounced foreshortening */
+  perspective-origin: 50% 50%;
+  overflow: hidden;
+  background: var(--charcoal);
+  border-radius: var(--radius);
+  cursor: grab;
+  touch-action: pan-y;
+  isolation: isolate;
+}
+.depth__stage:active { cursor: grabbing; }
+.depth__stage:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+
+/* Haze at the far end so frames arrive out of darkness rather than popping. */
+.depth__stage::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none; z-index: 2;
+  background: radial-gradient(ellipse 85% 80% at 50% 50%, transparent 55%, rgba(13,13,13,0.55) 100%);
+}
+
+.depth__field {
+  position: absolute; inset: 0;
+  transform-style: preserve-3d;
+}
+
+.depth__plane {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: clamp(9rem, 17vw, 14rem);
+  margin: 0;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+}
+.depth__plane button {
+  display: block; width: 100%; padding: 0; border: 0;
+  background: var(--charcoal-2); cursor: zoom-in;
+  /* A hairline keeps overlapping frames legible as separate photographs. */
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius); overflow: hidden;
+  box-shadow: 0 30px 60px -35px rgba(0,0,0,0.9);
+}
+.depth__plane img {
+  display: block; width: 100%; aspect-ratio: 2 / 3;
+  object-fit: cover; filter: grayscale(1);
+}
+
+/* Source list: the no-JS fallback, hidden once the 3D field is built. */
+.depth__source {
+  list-style: none; padding: 0;
+  margin: clamp(1.5rem, 3vw, 2rem) 0 0;
+  display: grid; gap: clamp(0.75rem, 1.5vw, 1.25rem);
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+}
+.depth__source[hidden] { display: none; }
+.depth__source img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: var(--radius); }
+
+@media (max-width: 640px) {
+  .depth__stage { height: 24rem; perspective: 520px; }
+  .depth__plane { width: 8.5rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .depth__stage::after { display: none; }
+}

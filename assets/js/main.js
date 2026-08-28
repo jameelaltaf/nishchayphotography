@@ -370,6 +370,258 @@
     }
   })();
 
+  /* ---------------------------------------------------- depth gallery ---- */
+  (function depthGallery() {
+    var root = document.querySelector('[data-depth]');
+    if (!root) return;
+
+    var stage = root.querySelector('[data-depth-stage]');
+    var field = root.querySelector('[data-depth-field]');
+    var source = root.querySelector('[data-depth-source]');
+    var tabs = root.querySelector('[data-depth-tabs]');
+    var status = root.querySelector('[data-depth-status]');
+    var prevBtn = root.querySelector('[data-depth-prev]');
+    var nextBtn = root.querySelector('[data-depth-next]');
+    if (!stage || !field || !source) return;
+
+    var DEPTH = 2200;          // px from the far wall to the camera plane
+    var NEAR = 300;            // how far past the camera a frame travels
+    var MIN_SLOTS = 9;         // repeat a short set so the corridor stays full
+    var MAX_SLOTS = 12;        // more than this and the corridor reads as a pile
+    var STEP = 0;              // spacing between frames, set per category
+
+    var items = Array.prototype.map.call(source.querySelectorAll('li'), function (li) {
+      var img = li.querySelector('img');
+      return {
+        category: li.getAttribute('data-category'),
+        caption: li.getAttribute('data-caption') || '',
+        src: img.getAttribute('src'),
+        alt: img.getAttribute('alt') || ''
+      };
+    });
+    if (!items.length) return;
+
+    var planes = [];
+    var pos = 0;               // travel along the corridor, px
+    var velocity = 0;
+    var dragging = false;
+    var paused = false;
+    var visible = false;
+    var frame = null;
+    var current = '';
+
+    // A deterministic scatter keeps frames off the centre line without
+    // overlapping; Math.random would reshuffle on every category switch.
+    function scatter(i) {
+      var a = i * 2.399963;                  // golden angle, even distribution
+      var r = 0.34 + 0.66 * ((i * 0.618033) % 1);
+      return { x: Math.cos(a) * r * 250, y: Math.sin(a) * r * 155 };
+    }
+
+    function build(category) {
+      var pool = items.filter(function (it) {
+        return category === 'all' || it.category === category;
+      });
+      if (!pool.length) return;
+
+      var slots = Math.min(MAX_SLOTS, Math.max(MIN_SLOTS, pool.length));
+      STEP = DEPTH / slots;
+
+      field.innerHTML = '';
+      planes = [];
+
+      for (var i = 0; i < slots; i++) {
+        var it = pool[i % pool.length];
+        var off = scatter(i);
+
+        var fig = document.createElement('figure');
+        fig.className = 'depth__plane';
+
+        var btn = document.createElement('button');
+        btn.type = 'button';
+        btn.setAttribute('data-lightbox-item', '');
+        btn.setAttribute('data-full', it.src);
+        btn.setAttribute('data-caption', it.caption);
+
+        var img = document.createElement('img');
+        img.src = it.src;
+        img.alt = it.alt;
+        img.loading = 'lazy';
+        img.decoding = 'async';
+
+        btn.appendChild(img);
+        fig.appendChild(btn);
+        field.appendChild(fig);
+
+        planes.push({ el: fig, base: i * STEP, x: off.x, y: off.y, caption: it.caption, blur: -1 });
+      }
+
+      pos = 0;
+      // The field is decorative duplication of the source list, which stays in
+      // the DOM for assistive tech and for the no-JS case.
+      field.removeAttribute('aria-hidden');
+      field.setAttribute('aria-hidden', 'true');
+      layout();
+      announce();
+      document.dispatchEvent(new CustomEvent('gallery:filtered'));
+    }
+
+    function layout() {
+      for (var i = 0; i < planes.length; i++) {
+        var p = planes[i];
+        // Wrap into [0, DEPTH): 0 is at the camera, DEPTH is the far wall.
+        var d = (p.base - pos) % DEPTH;
+        if (d < 0) d += DEPTH;
+        var z = NEAR - d;                      // +NEAR (past viewer) .. -(DEPTH-NEAR)
+        var t = d / DEPTH;                     // 0 near, 1 far
+
+        // Fade in from the far wall, fade out as it passes the camera.
+        var opacity = 0.35 + 0.65 * (1 - t);        // recede into the dark
+        if (t > 0.80) opacity *= Math.max(0, (1 - t) / 0.20);
+        else if (d < 120) opacity *= Math.max(0, d / 120);
+
+        // Blur far frames; quantised so the filter is not rebuilt every frame.
+        var blur = t > 0.62 ? Math.round(((t - 0.62) / 0.38) * 4 * 2) / 2 : 0;
+
+        var el = p.el;
+        el.style.transform = 'translate3d(calc(-50% + ' + p.x.toFixed(0) + 'px), calc(-50% + ' +
+          p.y.toFixed(0) + 'px), ' + z.toFixed(0) + 'px)';
+        el.style.opacity = opacity.toFixed(2);
+        if (blur !== p.blur) {
+          el.style.filter = blur > 0 ? 'blur(' + blur + 'px)' : '';
+          p.blur = blur;
+        }
+        // Only the frames in the readable band should be clickable.
+        el.style.pointerEvents = (t < 0.42 && d > 140) ? 'auto' : 'none';
+      }
+    }
+
+    function announce() {
+      if (!status || !planes.length) return;
+      var best = null, bestD = Infinity;
+      for (var i = 0; i < planes.length; i++) {
+        var d = (planes[i].base - pos) % DEPTH;
+        if (d < 0) d += DEPTH;
+        if (d < bestD && d > 100) { bestD = d; best = planes[i]; }
+      }
+      if (best) status.innerHTML = best.caption;
+    }
+
+    function tick() {
+      frame = null;
+      if (!dragging) {
+        if (Math.abs(velocity) > 0.05) {
+          pos += velocity;
+          velocity *= 0.94;
+          if (Math.abs(velocity) <= 0.05) announce();
+        } else if (visible && !paused && !reduceMotion) {
+          pos += 0.55;                          // slow drift toward the viewer
+        }
+      }
+      layout();
+      schedule();
+    }
+
+    function schedule() {
+      var resting = Math.abs(velocity) <= 0.05 &&
+        (dragging || paused || !visible || reduceMotion);
+      if (resting || frame) return;
+      frame = window.requestAnimationFrame(tick);
+    }
+
+    function nudge(by) {
+      pos += by;
+      layout();
+      announce();
+      schedule();
+    }
+
+    /* --- input ---------------------------------------------------------- */
+    var startY = 0, startPos = 0, lastY = 0, moved = false;
+
+    stage.addEventListener('pointerdown', function (e) {
+      if (e.button !== undefined && e.button !== 0) return;
+      dragging = true; moved = false;
+      startY = lastY = e.clientY;
+      startPos = pos; velocity = 0;
+    });
+    stage.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      var dy = e.clientY - startY;
+      if (!moved && Math.abs(dy) > 4) {
+        moved = true;
+        stage.setPointerCapture(e.pointerId);
+      }
+      if (!moved) return;
+      pos = startPos + dy * 2.2;
+      velocity = (e.clientY - lastY) * 2.2;
+      lastY = e.clientY;
+      layout();
+    });
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      if (e && e.pointerId !== undefined && stage.hasPointerCapture(e.pointerId)) {
+        stage.releasePointerCapture(e.pointerId);
+      }
+      if (reduceMotion) velocity = 0;
+      announce();
+      schedule();
+    }
+    stage.addEventListener('pointerup', endDrag);
+    stage.addEventListener('pointercancel', endDrag);
+    stage.addEventListener('click', function (e) {
+      if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; }
+    }, true);
+
+    // Arrow keys are handled on the stage only, never on document: hijacking
+    // them globally would break ordinary keyboard scrolling of the page.
+    stage.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); nudge(-STEP); }
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); nudge(STEP); }
+    });
+    if (prevBtn) prevBtn.addEventListener('click', function () { nudge(-STEP); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { nudge(STEP); });
+
+    if (tabs) {
+      tabs.addEventListener('click', function (e) {
+        var btn = e.target.closest('button[data-depth-cat]');
+        if (!btn) return;
+        var cat = btn.getAttribute('data-depth-cat');
+        if (cat === current) return;
+        current = cat;
+        Array.prototype.forEach.call(tabs.querySelectorAll('button'), function (b) {
+          b.setAttribute('aria-pressed', String(b === btn));
+        });
+        build(cat);
+        schedule();
+      });
+    }
+
+    ['pointerenter', 'focusin'].forEach(function (evt) {
+      stage.addEventListener(evt, function () { paused = true; announce(); });
+    });
+    ['pointerleave', 'focusout'].forEach(function (evt) {
+      stage.addEventListener(evt, function () { paused = false; schedule(); });
+    });
+
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        visible = entries[0].isIntersecting;
+        schedule();
+      }, { threshold: 0.1 }).observe(stage);
+    } else {
+      visible = true;
+    }
+
+    window.addEventListener('resize', layout);
+
+    current = 'all';
+    build('all');
+    source.hidden = true;      // the 3D field replaces the fallback grid
+    schedule();
+  })();
+
   /* ------------------------------------------------- pointer tilt -------- */
   (function tilt3d() {
     // Tilt is a pointer affordance: pointless on touch, unwanted with reduced
