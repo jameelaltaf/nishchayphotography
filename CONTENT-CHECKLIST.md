@@ -5,6 +5,14 @@ it before pointing a domain at the site. Grep targets are given where useful.
 
 ## 1. Studio identity
 
+- [x] **Studio name** — now "Nish Impressions Studio" throughout, taken from the
+      logo in the shared Drive folder. `nishchayphotography.ca` is kept as the
+      domain and email host.
+- [x] **Logo** — the real vector logo is in `assets/brand/`, used in the header,
+      the footer and the favicon.
+- [ ] **Photographs** — still the generated placeholders. The Drive originals
+      are 10-32 MB each and need resizing before they go anywhere near the site.
+
 - [ ] **Domain** — `nishchayphotography.ca` appears in `build.py` (`SITE_URL`),
       `src/partials/base.html`, `robots.txt` and the JSON-LD blocks in
       `src/pages/`. Replace everywhere, then rebuild.

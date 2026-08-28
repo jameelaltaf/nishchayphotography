@@ -1,10 +1,12 @@
 /* =========================================================================
    Nishchay Photography - design system
-   Monochrome, editorial, image-first. No frameworks.
+   Near-monochrome, editorial, image-first. No frameworks.
 
-   Colour is deliberately absent: the photographs supply all of it. Dark
-   contexts re-point the same tokens rather than overriding each component,
-   so anything dropped inside them themes itself.
+   Greys carry the page; the brand orange appears only on small accents -
+   prices, eyebrows, rules and focus states - so the photographs stay the
+   loudest thing on screen. Dark contexts re-point the same tokens rather
+   than overriding each component, so anything dropped inside them themes
+   itself.
    ========================================================================= */
 
 :root {
@@ -16,7 +18,10 @@
   --muted:      #6b6b6b;
   --line:       #e4e4e4;
   --line-dark:  #2e2e2e;
-  --accent:     #101010;   /* no hue - weight and spacing carry emphasis */
+  /* Brand orange. #f6780a is only ~2.8:1 on white, so text uses a darkened
+     mix and the full-strength value is reserved for dark grounds and fills. */
+  --accent:     #b35405;
+  --accent-full:#f6780a;
   --charcoal:   #0d0d0d;   /* hero and footer bands */
   --charcoal-2: #171717;
   --btn-on-ink: var(--ivory);
@@ -98,7 +103,7 @@ h4 { font-family: var(--font-body); font-size: 1rem; font-weight: 500; letter-sp
   --ink-soft:   #d6d6d6;
   --muted:      #9a9a9a;
   --line:       var(--line-dark);
-  --accent:     #ffffff;
+  --accent:     var(--accent-full);
   --paper:      var(--charcoal-2);
   --btn-on-ink: var(--charcoal);
 }
@@ -199,8 +204,11 @@ body.nav-open .site-header:not(.is-stuck) .nav__cta {
   display: block; font-family: var(--font-display);
   font-size: 1.6rem; letter-spacing: 0.06em; margin: 0;
 }
+.wordmark__logo { display: block; height: 2.6rem; width: auto; }
+.wordmark__logo--footer { height: 2.9rem; margin-bottom: 0.9rem; }
+@media (max-width: 560px) { .wordmark__logo { height: 2.1rem; } }
 .wordmark__sub {
-  display: block; font-size: 0.58rem; letter-spacing: 0.28em;
+  display: block; font-size: 0.55rem; letter-spacing: 0.26em;
   text-transform: uppercase; color: var(--muted); margin-top: 0.15rem;
 }
 

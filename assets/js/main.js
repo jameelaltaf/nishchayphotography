@@ -1,5 +1,5 @@
 /* =========================================================================
-   Nishchay Photography - site behaviour
+   Nish Impressions Studio - site behaviour
    Vanilla ES2019. Every feature degrades gracefully without JS.
    ========================================================================= */
 (function () {
