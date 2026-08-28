@@ -370,6 +370,81 @@
     }
   })();
 
+  /* ------------------------------------------------- pointer tilt -------- */
+  (function tilt3d() {
+    // Tilt is a pointer affordance: pointless on touch, unwanted with reduced
+    // motion, and expensive on low-end devices driving a large grid.
+    if (reduceMotion) return;
+    if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+    var MAX = 5;                       // degrees; past ~6 it reads as a gimmick
+    var targets = document.querySelectorAll('.card.reveal, .package.reveal');
+    if (!targets.length) return;
+
+    var pending = null;
+
+    function apply(el, e) {
+      var r = el.getBoundingClientRect();
+      var px = (e.clientX - r.left) / r.width - 0.5;
+      var py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.setProperty('--tilt-x', (px * MAX * 2).toFixed(2) + 'deg');
+      el.style.setProperty('--tilt-y', (-py * MAX * 2).toFixed(2) + 'deg');
+    }
+
+    Array.prototype.forEach.call(targets, function (el) {
+      el.addEventListener('pointerenter', function () { el.classList.add('is-tilting'); });
+      el.addEventListener('pointermove', function (e) {
+        if (pending) return;                       // one update per frame
+        pending = window.requestAnimationFrame(function () {
+          pending = null;
+          apply(el, e);
+        });
+      });
+      el.addEventListener('pointerleave', function () {
+        el.classList.remove('is-tilting');
+        el.style.setProperty('--tilt-x', '0deg');
+        el.style.setProperty('--tilt-y', '0deg');
+      });
+    });
+  })();
+
+  /* ------------------------------------------------- hero parallax ------- */
+  (function heroDepth() {
+    if (reduceMotion) return;
+    var media = document.querySelector('.hero .hero__media');
+    if (!media) return;
+
+    var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    var px = 0, py = 0, scrollY = 0, queued = false;
+
+    function paint() {
+      queued = false;
+      media.style.setProperty('--hero-px', px.toFixed(1) + 'px');
+      media.style.setProperty('--hero-py', (py + scrollY).toFixed(1) + 'px');
+    }
+    function queue() {
+      if (queued) return;
+      queued = true;
+      window.requestAnimationFrame(paint);
+    }
+
+    if (fine) {
+      window.addEventListener('pointermove', function (e) {
+        px = (e.clientX / window.innerWidth - 0.5) * -24;
+        py = (e.clientY / window.innerHeight - 0.5) * -18;
+        queue();
+      }, { passive: true });
+    }
+
+    window.addEventListener('scroll', function () {
+      // Stop once the hero is off screen - no point animating what nobody sees.
+      var y = window.pageYOffset;
+      if (y > window.innerHeight) return;
+      scrollY = y * 0.18;
+      queue();
+    }, { passive: true });
+  })();
+
   /* ---------------------------------------------------- 3D carousel ------ */
   (function carousel3d() {
     var root = document.querySelector('[data-carousel3d]');

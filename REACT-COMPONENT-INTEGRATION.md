@@ -109,6 +109,24 @@ and it addresses the gaps above:
 - Falls back to a horizontally scrollable row with no JavaScript
 - Selecting a frame opens the existing shared lightbox
 
+### Other 3D effects, same approach
+
+The rest of the depth work follows the patterns a component registry like
+21st.dev packages up, written against this stack instead:
+
+| Effect | Where | Notes |
+| --- | --- | --- |
+| Pointer tilt | Service, journal and package cards | Max 5&deg;; pointer-only, one update per frame |
+| Entry lift in 3D | Cards and figures | `rotateX` unfolds to flat as the block enters |
+| Hero parallax | Homepage hero | Pointer offset plus scroll, stops once off screen |
+
+Entry lift, hover and tilt are composed through CSS custom properties inside a
+**single** `transform`. Declaring them as separate rules is the usual way these
+effects break: three declarations fight over one property and the tilt cancels
+the scroll animation. All three are disabled under `prefers-reduced-motion`,
+and tilt is additionally gated on `(hover: hover) and (pointer: fine)` so it
+never runs on touch.
+
 **If you want the React version instead**, section 3 is the path — but it means
 rebuilding 13 pages, adding a build step and a dependency tree to a site whose
 main virtue right now is that it has neither. Worth doing only if you want the

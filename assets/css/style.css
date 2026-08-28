@@ -251,8 +251,8 @@ body.nav-open .site-header:not(.is-stuck) .nav__cta {
 }
 
 /* ---------- Hero ---------- */
-.hero { position: relative; min-height: 100svh; display: grid; align-items: end; isolation: isolate; color: var(--ivory); }
-.hero__media { position: absolute; inset: 0; z-index: -2; overflow: hidden; }
+.hero { position: relative; min-height: 100svh; display: grid; align-items: end; isolation: isolate; overflow: hidden; color: var(--ivory); }
+.hero__media { position: absolute; inset: -40px; z-index: -2; overflow: hidden; }
 .hero__media img { width: 100%; height: 100%; object-fit: cover; animation: heroDrift 24s var(--ease) forwards; }
 @keyframes heroDrift { from { transform: scale(1.1); } to { transform: scale(1); } }
 .hero::after {
@@ -703,3 +703,48 @@ html:not(.js) .carousel3d__stage { perspective: none; overflow-x: auto; margin-i
 html:not(.js) .carousel3d__ring { width: auto; height: auto; display: flex; gap: 1rem; transform: none; }
 html:not(.js) .carousel3d__face { position: static; width: var(--face-w); height: var(--face-h); flex: none; }
 html:not(.js) .carousel3d__controls, html:not(.js) .carousel3d__hint { display: none; }
+
+/* ---------- 3D depth effects ----------------------------------------------
+   Entry lift, pointer tilt and hover are composed through custom properties
+   inside a single transform. Declaring them as separate rules would mean three
+   transforms fighting over one property, which is how tilt effects usually
+   end up cancelling their own scroll animation.
+   -------------------------------------------------------------------------- */
+.js .card.reveal,
+.js .package.reveal,
+.js .figure.reveal {
+  --enter-y: 1.75rem;
+  --enter-rx: 7deg;
+  --tilt-x: 0deg;     /* rotateY, from pointer position */
+  --tilt-y: 0deg;     /* rotateX, from pointer position */
+  --hover-y: 0rem;
+  transform:
+    perspective(900px)
+    translateY(calc(var(--enter-y) + var(--hover-y)))
+    rotateX(calc(var(--enter-rx) + var(--tilt-y)))
+    rotateY(var(--tilt-x));
+  transform-origin: 50% 100%;
+}
+.js .card.reveal.is-visible,
+.js .package.reveal.is-visible,
+.js .figure.reveal.is-visible { --enter-y: 0rem; --enter-rx: 0deg; }
+
+.js .card.reveal:hover, .js .package.reveal:hover { --hover-y: -0.3rem; }
+
+/* While tracking a pointer the transform must keep up, so the slow entry
+   easing is swapped for a short linear one. */
+.js .is-tilting { transition: transform 0.12s linear, box-shadow 0.4s var(--ease) !important; }
+.js .is-tilting .card__body { transform: translateZ(0.6rem); }
+
+/* Hero depth: the image keeps its own drift animation, so parallax is applied
+   to the wrapper instead of fighting it for the transform property. */
+.hero__media {
+  transform: translate3d(var(--hero-px, 0px), var(--hero-py, 0px), 0);
+  transition: transform 0.35s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .card.reveal, .js .package.reveal, .js .figure.reveal { transform: none; }
+  .hero__media { transform: none; }
+}
