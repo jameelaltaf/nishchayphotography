@@ -544,25 +544,35 @@
     }
 
     /* --- input ---------------------------------------------------------- */
-    var startY = 0, startPos = 0, lastY = 0, moved = false;
+    // Drag is horizontal, not vertical. The stage sets touch-action: pan-y so
+    // the page still scrolls under a vertical swipe; a vertical drag here would
+    // fight that, moving the corridor and scrolling the page at the same time.
+    var startX = 0, startY = 0, startPos = 0, lastX = 0, moved = false, axis = null;
 
     stage.addEventListener('pointerdown', function (e) {
       if (e.button !== undefined && e.button !== 0) return;
-      dragging = true; moved = false;
-      startY = lastY = e.clientY;
+      dragging = true; moved = false; axis = null;
+      startX = lastX = e.clientX;
+      startY = e.clientY;
       startPos = pos; velocity = 0;
     });
     stage.addEventListener('pointermove', function (e) {
       if (!dragging) return;
+      var dx = e.clientX - startX;
       var dy = e.clientY - startY;
-      if (!moved && Math.abs(dy) > 4) {
-        moved = true;
-        stage.setPointerCapture(e.pointerId);
+      // Lock the axis on the first real movement. A mostly-vertical swipe
+      // belongs to the page, not to this gallery, and must not drag it.
+      if (!axis && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        if (axis === 'x') {
+          moved = true;
+          stage.setPointerCapture(e.pointerId);
+        }
       }
-      if (!moved) return;
-      pos = startPos + dy * 2.2;
-      velocity = (e.clientY - lastY) * 2.2;
-      lastY = e.clientY;
+      if (axis !== 'x') return;
+      pos = startPos + dx * 2.2;
+      velocity = (e.clientX - lastX) * 2.2;
+      lastX = e.clientX;
       layout();
     });
     function endDrag(e) {
@@ -859,12 +869,13 @@
     function stepBy(n) { goTo(frontIndex() + n); }
 
     /* --- pointer drag ------------------------------------------------- */
-    var startX = 0, startAngle = 0, lastX = 0, moved = false;
+    var startX = 0, startY = 0, startAngle = 0, lastX = 0, moved = false, axis = null;
 
     ring.addEventListener('pointerdown', function (e) {
       if (e.button !== undefined && e.button !== 0) return;
-      dragging = true; moved = false;
+      dragging = true; moved = false; axis = null;
       startX = lastX = e.clientX;
+      startY = e.clientY;
       startAngle = angle;
       target = null; velocity = 0;
       // Capture is deferred until the pointer actually moves: capturing on
@@ -874,11 +885,17 @@
     ring.addEventListener('pointermove', function (e) {
       if (!dragging) return;
       var dx = e.clientX - startX;
-      if (!moved && Math.abs(dx) > 4) {
-        moved = true;
-        ring.setPointerCapture(e.pointerId);
+      var dy = e.clientY - startY;
+      // Same axis lock as the depth gallery: a vertical swipe scrolls the page
+      // and must not nudge the ring on the way past.
+      if (!axis && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+        if (axis === 'x') {
+          moved = true;
+          ring.setPointerCapture(e.pointerId);
+        }
       }
-      if (!moved) return;
+      if (axis !== 'x') return;
       angle = startAngle + dx * 0.25;
       velocity = (e.clientX - lastX) * 0.25;
       lastX = e.clientX;
