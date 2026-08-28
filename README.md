@@ -93,7 +93,28 @@ Rules the current markup already follows and that you should keep:
 - Every image has explicit `width`/`height` so nothing shifts as it loads.
 - Alt text describes the photograph, not the filename.
 
-Regenerate the placeholders any time with `python3 tools/make_placeholders.py`.
+Regenerate the abstract placeholders any time with
+`python3 tools/make_placeholders.py`.
+
+### Stand-in photography from Pexels
+
+To see the site with real photographs before the studio's own work is ready:
+
+```bash
+# free key from https://www.pexels.com/api/
+python3 tools/fetch_photos.py --dry-run          # see the plan
+python3 tools/fetch_photos.py --key YOUR_KEY     # download all 32
+python3 build.py
+```
+
+It downloads a categorised set into `assets/img/`, repoints every `.svg`
+reference to `.jpg`, and writes `PHOTO-CREDITS.md`. Use `--only name1,name2`
+to refresh individual images. Standard library only.
+
+> **These are stand-ins, not portfolio work.** A photography studio's portfolio
+> is the thing clients judge it by, so stock images of somebody else's
+> photographs must not stay on a public site. They are for development and
+> preview only.
 
 ---
 

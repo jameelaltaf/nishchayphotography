@@ -68,6 +68,9 @@ Every figure in `src/pages/services.html` is illustrative. Confirm all of them:
 ## 5. Photography
 
 - [ ] Replace all 32 files in `assets/img/` with real work (see README).
+      `tools/fetch_photos.py` can pull stand-ins from Pexels to preview the
+      layout, but stock photography must not remain on a live portfolio -
+      prospective clients judge the studio by what is on this page.
 - [ ] Rewrite every `alt` attribute to describe the actual photograph.
 - [ ] Update the figure captions, which currently name venues you may not have
       shot at (Distillery District, Casa Loma, Evergreen Brick Works, Muskoka,
