@@ -138,9 +138,15 @@
     var slides = [];
     var index = 0;
 
+    var scope = document;
+
+    // Sequence only within the group the opened image belongs to. Several
+    // galleries can share a page - the portfolio grid and the depth gallery
+    // both sit on /portfolio/ - and mixing them means the arrow keys walk out
+    // of the set the visitor is actually looking at.
     function collect() {
       slides = Array.prototype.filter.call(
-        document.querySelectorAll('[data-lightbox-item]'),
+        scope.querySelectorAll('[data-lightbox-item]'),
         function (btn) { return !btn.closest('[hidden]'); }
       );
     }
@@ -159,6 +165,7 @@
     document.addEventListener('click', function (e) {
       var btn = e.target.closest('[data-lightbox-item]');
       if (!btn) return;
+      scope = btn.closest('[data-lightbox-group]') || document;
       collect();
       opener = btn;
       show(slides.indexOf(btn));
@@ -620,6 +627,67 @@
     build('all');
     source.hidden = true;      // the 3D field replaces the fallback grid
     schedule();
+  })();
+
+  /* ------------------------------------------------- interactive hero --- */
+  (function heroStage() {
+    var stage = document.querySelector('[data-hero]');
+    if (!stage) return;
+
+    var video = stage.querySelector('[data-hero-video]');
+    var slides = Array.prototype.slice.call(stage.querySelectorAll('.hero__slide'));
+    var dots = Array.prototype.slice.call(document.querySelectorAll('[data-hero-dots] button'));
+    var index = 0, timer = null;
+
+    /* --- video, only if one has actually been supplied ------------------- */
+    // Opt-in by attribute rather than probing for a file: an empty value means
+    // no request at all, instead of a 404 on every page load.
+    var videoSrc = video && video.getAttribute('data-hero-src');
+    if (video && videoSrc && !reduceMotion) {
+      video.src = videoSrc;
+      var attempt = video.play();
+      if (attempt && attempt.then) {
+        attempt.then(function () {
+          video.classList.add('is-playing');
+          stop();
+        }).catch(function () {
+          // Autoplay refused, or the file is missing - the stills carry on.
+        });
+      }
+    }
+
+    /* --- crossfading stills ---------------------------------------------- */
+    function show(i) {
+      if (!slides.length) return;
+      index = (i + slides.length) % slides.length;
+      slides.forEach(function (el, n) { el.classList.toggle('is-active', n === index); });
+      dots.forEach(function (d, n) { d.setAttribute('aria-pressed', String(n === index)); });
+      // Restart the push so each frame gets its own slow move.
+      var active = slides[index];
+      if (!reduceMotion) {
+        active.style.animation = 'none';
+        void active.offsetWidth;
+        active.style.animation = '';
+      }
+    }
+    function start() {
+      if (reduceMotion || slides.length < 2) return;
+      stop();
+      timer = setInterval(function () { show(index + 1); }, 7000);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    dots.forEach(function (dot, n) {
+      dot.addEventListener('click', function () { show(n); start(); });
+    });
+
+    // Pause while the tab is hidden; nothing to animate for nobody.
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop(); else start();
+    });
+
+    show(0);
+    start();
   })();
 
   /* ------------------------------------------------- pointer tilt -------- */

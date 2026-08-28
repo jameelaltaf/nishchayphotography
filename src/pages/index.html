@@ -1,21 +1,44 @@
 title: Toronto Wedding & Portrait Photography | Nish Impressions Studio
 description: Toronto wedding, portrait and brand photography studio serving the GTA and Ontario. Documentary-leaning and delivered fast. Booking 2026-2027.
 output: index.html
-og_image: /assets/img/og-cover.svg
+og_image: /assets/img/og-cover.jpg
 body_class: has-dark-hero
 ---
 <section class="hero">
-  <div class="hero__media">
-    <img src="/assets/img/hero-01.svg" alt="A couple framed against warm evening light at a Toronto wedding" width="2400" height="1350" fetchpriority="high" decoding="async">
+  <div class="hero__media" data-hero>
+    <!-- To use a video hero: encode a short, silent, web-sized MP4, put it in
+         assets/video/, and name it in data-hero-src below. While the attribute
+         is empty nothing is requested and the stills run instead. -->
+    <video class="hero__video" data-hero-video data-hero-src=""
+           muted loop playsinline preload="none"
+           poster="/assets/img/hero-01.jpg" aria-hidden="true"></video>
+
+    <div class="hero__slides" data-hero-slides>
+      <img class="hero__slide is-active" src="/assets/img/hero-01.jpg"
+           alt="Newborn swaddled in deep red, wearing a floral crown"
+           width="2400" height="1350" fetchpriority="high" decoding="async">
+      <img class="hero__slide" src="/assets/img/family-01.jpg"
+           alt="Newborn asleep in a lavender hammock beside crocheted toys"
+           width="1600" height="1067" loading="lazy" decoding="async">
+      <img class="hero__slide" src="/assets/img/feature-wide.jpg"
+           alt="Newborn asleep in a deep red wrap"
+           width="2000" height="1000" loading="lazy" decoding="async">
+    </div>
   </div>
   <div class="hero__inner">
     <p class="eyebrow">Toronto &middot; Ontario &middot; Anywhere you're going</p>
     <h1 class="display">The day as it actually felt.</h1>
-    <p class="lede">A documentary-leaning photography studio for weddings, portraits and brands &mdash; quietly directed when it helps, invisible when it doesn't.</p>
+    <p class="lede">A documentary-leaning studio for newborns, weddings, portraits and brands &mdash; quietly directed when it helps, invisible when it doesn't.</p>
     <div class="hero__actions">
       <a class="btn btn--light" href="/portfolio/">View the portfolio</a>
       <a class="btn btn--outline-light" href="/contact/">Check your date</a>
     </div>
+    <div class="hero__dots" data-hero-dots role="group" aria-label="Choose a hero image">
+      <button type="button" aria-pressed="true"><span class="hp">Show image 1</span></button>
+      <button type="button" aria-pressed="false"><span class="hp">Show image 2</span></button>
+      <button type="button" aria-pressed="false"><span class="hp">Show image 3</span></button>
+    </div>
+
     <div class="hero__meta">
       <span>Booking 2026&ndash;2027</span>
       <span>Sneak peeks in 48 hours</span>
@@ -58,7 +81,7 @@ body_class: has-dark-hero
     </div>
     <div class="carousel3d" data-carousel3d style="margin-top:clamp(2rem,4vw,3rem);">
       <div class="carousel3d__stage">
-        <div class="carousel3d__ring" data-carousel3d-ring
+        <div class="carousel3d__ring" data-carousel3d-ring data-lightbox-group
              role="group" aria-roledescription="carousel" aria-label="Selected work, rotating showcase"
              tabindex="0">
         <figure class="carousel3d__face">
@@ -87,8 +110,8 @@ body_class: has-dark-hero
         </figure>
         <figure class="carousel3d__face">
           <button class="carousel3d__btn" type="button" data-lightbox-item
-                  data-full="/assets/img/family-02.svg" data-caption="Leslieville &middot; Family">
-            <img src="/assets/img/family-02.svg" alt="Parent and child photographed at home in daylight" width="1067" height="1600" loading="lazy" decoding="async">
+                  data-full="/assets/img/family-02.jpg" data-caption="Newborn &middot; Studio session">
+            <img src="/assets/img/family-02.jpg" alt="Newborn asleep in a lavender hammock with a butterfly headband" width="1067" height="1600" loading="lazy" decoding="async">
           </button>
         </figure>
         <figure class="carousel3d__face">
@@ -185,7 +208,7 @@ body_class: has-dark-hero
 
       <article class="card reveal">
         <a class="card__link" href="/services/#families">
-          <figure class="figure ratio-3-2"><img class="cover" src="/assets/img/family-01.svg" alt="Family together in soft outdoor light" width="1600" height="1067" loading="lazy" decoding="async"></figure>
+          <figure class="figure ratio-3-2"><img class="cover" src="/assets/img/family-01.jpg" alt="Newborn asleep in a lavender hammock beside crocheted toys" width="1600" height="1067" loading="lazy" decoding="async"></figure>
         </a>
         <div class="card__body">
           <h3>Family &amp; newborn</h3>
@@ -312,7 +335,7 @@ body_class: has-dark-hero
 
     <div class="grid grid--3" style="margin-top:clamp(2.5rem,5vw,4rem);">
       <article class="card reveal">
-        <figure class="figure ratio-16-9"><img class="cover" src="/assets/img/journal-01.svg" alt="Winter light across a Toronto Island shoreline" width="1600" height="1000" loading="lazy" decoding="async"></figure>
+        <figure class="figure ratio-16-9"><img class="cover" src="/assets/img/journal-01.jpg" alt="Newborn asleep in a deep red wrap" width="1600" height="1000" loading="lazy" decoding="async"></figure>
         <div class="card__body">
           <p class="post-meta">Wedding &middot; 8 min read</p>
           <h3>A February elopement on Toronto Island</h3>

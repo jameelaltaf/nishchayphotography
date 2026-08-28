@@ -10,8 +10,19 @@ it before pointing a domain at the site. Grep targets are given where useful.
       domain and email host.
 - [x] **Logo** — the real vector logo is in `assets/brand/`, used in the header,
       the footer and the favicon.
-- [ ] **Photographs** — still the generated placeholders. The Drive originals
-      are 10-32 MB each and need resizing before they go anywhere near the site.
+- [~] **Photographs** — 7 slots now hold real studio work (the hero, the wide
+      feature, the social card, all three family/newborn slots and one journal
+      header), taken from the Drive folder and resized for web. 26 abstract
+      placeholders remain. The Drive connector used here caps out between 4 MB
+      and 9.8 MB per file and the remaining originals are 10-32 MB, so run
+      `tools/fetch_from_drive.py` locally to pull the rest.
+- [ ] **Hero video** — the hero is video-ready. Encode a short, silent,
+      web-sized MP4, drop it in `assets/video/`, and set `data-hero-src` on the
+      `<video>` in `src/pages/index.html`. While that attribute is empty no
+      request is made and the still crossfade runs instead.
+- [ ] **Captions on placeholder images** — the remaining `.svg` slots still
+      carry invented venue names (Distillery District, Casa Loma, Muskoka).
+      Replace those as each real photograph goes in.
 
 - [ ] **Domain** — `nishchayphotography.ca` appears in `build.py` (`SITE_URL`),
       `src/partials/base.html`, `robots.txt` and the JSON-LD blocks in
