@@ -108,6 +108,11 @@ Every figure in `src/pages/services.html` is illustrative. Confirm all of them:
 
 ## 7. Integrations
 
+- [ ] **Floating contact buttons** — on phones these collapse behind a single
+      launcher to keep the screen clear. If you add more contact channels,
+      keep the collapsed footprint small; two stacked buttons were measured
+      sitting on form fields and call-to-action buttons.
+
 - [ ] **Enquiry form** — add an `action` endpoint (README → Connecting the form)
       and set the success redirect to `/thank-you/`.
 - [ ] **Client galleries** — `https://nishchayphotography.pixieset.com/` in

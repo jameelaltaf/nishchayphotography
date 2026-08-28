@@ -463,6 +463,7 @@
 <!-- Floating contact stack: WhatsApp, then the assistant launcher. -->
 <div class="widgets" data-widgets>
 
+  <div class="widgets__actions" id="widget-actions" data-widget-actions>
   <a class="fab fab--whatsapp"
      href="https://wa.me/14165550142?text=Hi%20Nishchay%2C%20I%27d%20like%20to%20check%20your%20availability."
      rel="noopener" target="_blank"
@@ -483,6 +484,20 @@
       <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/>
     </svg>
     <span class="fab__label" data-chat-label>Ask a question</span>
+  </button>
+  </div>
+
+  <!-- Mobile only. Two stacked buttons covered too much of the page, so on a
+       phone they collapse behind this one and expand on demand. -->
+  <button class="fab fab--launcher" type="button"
+          aria-expanded="false" aria-controls="widget-actions"
+          data-widgets-toggle aria-label="Contact options">
+    <svg class="fab__icon fab__icon--open" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M12 3C7.03 3 3 6.58 3 11c0 2.2 1.01 4.19 2.65 5.63L5 21l4.3-2.06c.85.23 1.75.35 2.7.35 4.97 0 9-3.58 9-8.29S16.97 3 12 3z"/>
+    </svg>
+    <svg class="fab__icon fab__icon--close" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+      <path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M6 6l12 12M18 6L6 18"/>
+    </svg>
   </button>
 
   <section class="chat" id="studio-assistant" aria-label="Studio assistant" hidden data-chat-panel>

@@ -1077,6 +1077,68 @@
     });
   })();
 
+  /* --------------------------------------------- floating stack tucking -- */
+  (function tuckWidgets() {
+    var stack = document.querySelector('[data-widgets]');
+    if (!stack) return;
+
+    var panel = stack.querySelector('[data-chat-panel]');
+    var launcher = stack.querySelector('[data-widgets-toggle]');
+
+    // Mobile launcher: expands the two action buttons.
+    if (launcher) {
+      launcher.addEventListener('click', function () {
+        var open = stack.classList.toggle('is-open');
+        launcher.setAttribute('aria-expanded', String(open));
+      });
+      document.addEventListener('click', function (e) {
+        if (!stack.contains(e.target) && stack.classList.contains('is-open')) {
+          stack.classList.remove('is-open');
+          launcher.setAttribute('aria-expanded', 'false');
+        }
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && stack.classList.contains('is-open')) {
+          stack.classList.remove('is-open');
+          launcher.setAttribute('aria-expanded', 'false');
+          launcher.focus();
+        }
+      });
+    }
+    var lastY = window.pageYOffset;
+    var idle = null;
+
+    function tucked(on) {
+      // Never hide it while the assistant is open - that would pull the panel
+      // the reader is using off the screen.
+      if (on && panel && !panel.hidden) return;
+      stack.classList.toggle('is-tucked', on);
+    }
+
+    window.addEventListener('scroll', function () {
+      var y = window.pageYOffset;
+      if (y > lastY + 4) tucked(true);        // moving down: get out of the way
+      else if (y < lastY - 4) tucked(false);  // moving back up: return
+      lastY = y;
+      clearTimeout(idle);
+      idle = setTimeout(function () { tucked(false); }, 550);
+    }, { passive: true });
+
+
+    // A form field must never sit under the stack while it is being filled in.
+    document.addEventListener('focusin', function (e) {
+      if (e.target.closest('input, textarea, select') && !stack.contains(e.target)) tucked(true);
+    });
+    document.addEventListener('focusout', function (e) {
+      if (e.target.closest('input, textarea, select')) {
+        setTimeout(function () {
+          var a = document.activeElement;
+          if (!a || !a.closest || !a.closest('input, textarea, select')) tucked(false);
+        }, 60);
+      }
+    });
+  })();
+
   /* ---------------------------------------------------------- misc details */
   (function misc() {
     var year = document.querySelector('[data-year]');

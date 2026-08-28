@@ -279,7 +279,23 @@ body.nav-open .site-header:not(.is-stuck) .nav__cta {
     linear-gradient(100deg, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.55) 38%, rgba(0,0,0,0.12) 68%, rgba(0,0,0,0) 100%),
     linear-gradient(180deg, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.25) 30%, rgba(0,0,0,0.82) 100%);
 }
-.hero__inner { max-width: var(--wrap); margin-inline: auto; width: 100%; padding: 0 var(--gutter) clamp(3.5rem, 8vh, 7rem); }
+.hero__inner {
+  max-width: var(--wrap); margin-inline: auto; width: 100%;
+  /* The top padding is not decoration: the hero aligns its content to the end,
+     so on a short viewport - a phone with the browser toolbar showing - content
+     taller than the hero overflows upward and collides with the fixed header.
+     Reserving the header's height means the hero grows downward instead. */
+  padding: clamp(5.5rem, 14vh, 8rem) var(--gutter) clamp(3.5rem, 8vh, 7rem);
+}
+
+/* Short screens: tighten the hero so it still tends to fit in one view. */
+@media (max-height: 720px) {
+  .hero__meta { margin-top: 1.25rem; padding-top: 1rem; gap: 0.5rem 1.25rem; }
+  .hero__actions { margin-top: 1.25rem; }
+  .hero__dots { margin-top: 1.25rem; }
+  .hero h1 { font-size: clamp(2.1rem, 8vw, 3.2rem); }
+  .hero .lede { font-size: 1rem; }
+}
 /* Small orange type over a photograph is a gamble: the hero crossfades and
    slowly pushes, so the backdrop brightness under this line changes. Measured
    at only 2.92:1 against the brightest patch, versus 18:1 for white. */
@@ -568,6 +584,18 @@ body.nav-open .site-header:not(.is-stuck) .nav__cta {
   bottom: clamp(1rem, 3vw, 1.75rem);
   z-index: 150;
   display: flex; flex-direction: column; align-items: flex-end; gap: 0.65rem;
+  transition: transform 0.3s var(--ease), opacity 0.3s var(--ease);
+}
+/* A fixed stack always covers something. On a phone it was sitting on a form
+   field and on the client-gallery button, so it tucks away while the page is
+   scrolling down or a field has focus, and comes back when the reader stops. */
+.widgets.is-tucked {
+  transform: translateX(calc(100% + clamp(1rem, 3vw, 1.75rem)));
+  opacity: 0;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .widgets { transition: none; }
 }
 
 .fab {
@@ -896,4 +924,29 @@ html:not(.js) .carousel3d__controls, html:not(.js) .carousel3d__hint { display: 
 @media (prefers-reduced-motion: reduce) {
   .hero__slide { animation: none; transition: none; }
   .hero__video { transition: none; }
+}
+
+/* ---------- Floating stack: one button on a phone ------------------------- */
+.widgets__actions { display: flex; flex-direction: column; align-items: flex-end; gap: 0.65rem; }
+.fab--launcher { display: none; }
+
+@media (max-width: 700px) {
+  /* Two stacked buttons occupied ~56x124 of a small screen permanently, and
+     were measured sitting on CTAs, form fields and gallery controls. Collapsed
+     behind one launcher, the resting footprint is roughly halved. */
+  .fab--launcher { display: inline-flex; padding: 0.85rem; }
+  .widgets__actions {
+    opacity: 0; visibility: hidden; transform: translateY(0.5rem);
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease), visibility 0.25s;
+  }
+  .widgets.is-open .widgets__actions { opacity: 1; visibility: visible; transform: none; }
+  /* Collapsed actions must not reserve layout space. */
+  .widgets:not(.is-open) .widgets__actions { position: absolute; bottom: 100%; right: 0; margin-bottom: 0.65rem; }
+  .widgets.is-open .widgets__actions { position: absolute; bottom: 100%; right: 0; margin-bottom: 0.65rem; }
+  .widgets { position: fixed; }
+  .fab--launcher[aria-expanded="true"] .fab__icon--open { display: none; }
+  .fab--launcher[aria-expanded="true"] .fab__icon--close { display: block; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .widgets__actions { transition: none; }
 }
