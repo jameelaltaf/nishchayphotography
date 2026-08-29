@@ -14,61 +14,61 @@ import random
 
 OUT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "assets", "img")
 
-# Warm, film-inspired palettes: (background a, background b, blob colours...)
+# Greyscale ramps, ordered dark to light: (background a, background b, blobs...)
 PALETTES = {
-    "goldenhour": ("#3a2418", "#c98f52", ["#f2c48b", "#8c4a24", "#ffe2bb", "#5b2d15"]),
-    "ivory":      ("#efe6d8", "#cdbba3", ["#ffffff", "#b39b7c", "#e8dcc8", "#8d7454"]),
-    "evergreen":  ("#16231d", "#3f5c4b", ["#8fae99", "#20342a", "#cfe0d4", "#0d1713"]),
-    "dusk":       ("#241d2e", "#6a5a7d", ["#b7a5c8", "#33263f", "#e3d7ee", "#150f1c"]),
-    "linen":      ("#e6ded2", "#c3b5a1", ["#fdfbf7", "#a08d74", "#dccfbb", "#7d6a52"]),
-    "ember":      ("#2b1512", "#a4472f", ["#e59a72", "#6d2a1c", "#ffd6b8", "#3d1a13"]),
-    "slate":      ("#1b1e22", "#4d565f", ["#9aa5b0", "#272c32", "#d5dbe1", "#101317"]),
-    "blush":      ("#f0dfd8", "#d4a898", ["#ffffff", "#b07f6d", "#f7e9e3", "#8a5f50"]),
+    "onyx":     ("#0a0a0a", "#3d3d3d", ["#6b6b6b", "#161616", "#8f8f8f", "#000000"]),
+    "graphite": ("#161616", "#4e4e4e", ["#7d7d7d", "#232323", "#a0a0a0", "#0a0a0a"]),
+    "slate":    ("#1f1f1f", "#5c5c5c", ["#8a8a8a", "#2d2d2d", "#adadad", "#111111"]),
+    "ash":      ("#2e2e2e", "#737373", ["#9c9c9c", "#3d3d3d", "#c0c0c0", "#1c1c1c"]),
+    "smoke":    ("#454545", "#8c8c8c", ["#b0b0b0", "#565656", "#d2d2d2", "#2e2e2e"]),
+    "silver":   ("#5e5e5e", "#a3a3a3", ["#c4c4c4", "#6f6f6f", "#e0e0e0", "#454545"]),
+    "pearl":    ("#767676", "#b8b8b8", ["#d8d8d8", "#888888", "#efefef", "#5c5c5c"]),
+    "paper":    ("#8a8a8a", "#c9c9c9", ["#e6e6e6", "#9c9c9c", "#f7f7f7", "#6f6f6f"]),
 }
 
 # name -> (width, height, palette, grain)
 SPECS = [
     # Home hero / feature imagery
-    ("hero-01",       2400, 1350, "goldenhour"),
-    ("hero-02",       2400, 1350, "evergreen"),
-    ("hero-03",       2400, 1350, "dusk"),
-    ("feature-wide",  2000, 1000, "linen"),
+    ("hero-01",       2400, 1350, "graphite"),
+    ("hero-02",       2400, 1350, "slate"),
+    ("hero-03",       2400, 1350, "onyx"),
+    ("feature-wide",  2000, 1000, "paper"),
     # Portfolio - weddings
-    ("wedding-01", 1600, 1067, "goldenhour"),
-    ("wedding-02", 1067, 1600, "ivory"),
-    ("wedding-03", 1600, 1067, "evergreen"),
-    ("wedding-04", 1067, 1600, "blush"),
-    ("wedding-05", 1600, 1067, "dusk"),
-    ("wedding-06", 1200, 1200, "linen"),
+    ("wedding-01", 1600, 1067, "graphite"),
+    ("wedding-02", 1067, 1600, "pearl"),
+    ("wedding-03", 1600, 1067, "slate"),
+    ("wedding-04", 1067, 1600, "silver"),
+    ("wedding-05", 1600, 1067, "onyx"),
+    ("wedding-06", 1200, 1200, "paper"),
     # Portfolio - engagements / couples
-    ("engagement-01", 1600, 1067, "ember"),
-    ("engagement-02", 1067, 1600, "goldenhour"),
-    ("engagement-03", 1200, 1200, "evergreen"),
+    ("engagement-01", 1600, 1067, "ash"),
+    ("engagement-02", 1067, 1600, "graphite"),
+    ("engagement-03", 1200, 1200, "slate"),
     # Portfolio - portraits
-    ("portrait-01", 1067, 1600, "slate"),
-    ("portrait-02", 1067, 1600, "ivory"),
-    ("portrait-03", 1200, 1200, "blush"),
-    ("portrait-04", 1600, 1067, "linen"),
+    ("portrait-01", 1067, 1600, "smoke"),
+    ("portrait-02", 1067, 1600, "pearl"),
+    ("portrait-03", 1200, 1200, "silver"),
+    ("portrait-04", 1600, 1067, "paper"),
     # Portfolio - family / newborn
-    ("family-01", 1600, 1067, "linen"),
-    ("family-02", 1067, 1600, "blush"),
-    ("family-03", 1200, 1200, "goldenhour"),
+    ("family-01", 1600, 1067, "paper"),
+    ("family-02", 1067, 1600, "silver"),
+    ("family-03", 1200, 1200, "graphite"),
     # Portfolio - commercial / brand
-    ("commercial-01", 1600, 1067, "slate"),
-    ("commercial-02", 1200, 1200, "dusk"),
-    ("commercial-03", 1067, 1600, "ember"),
+    ("commercial-01", 1600, 1067, "smoke"),
+    ("commercial-02", 1200, 1200, "onyx"),
+    ("commercial-03", 1067, 1600, "ash"),
     # About / team
-    ("about-01", 1200, 1500, "ivory"),
-    ("about-02", 1600, 1067, "evergreen"),
-    ("team-01",  1000, 1250, "linen"),
-    ("team-02",  1000, 1250, "slate"),
-    ("team-03",  1000, 1250, "blush"),
+    ("about-01", 1200, 1500, "pearl"),
+    ("about-02", 1600, 1067, "slate"),
+    ("team-01",  1000, 1250, "paper"),
+    ("team-02",  1000, 1250, "smoke"),
+    ("team-03",  1000, 1250, "silver"),
     # Journal
-    ("journal-01", 1600, 1000, "goldenhour"),
-    ("journal-02", 1600, 1000, "dusk"),
-    ("journal-03", 1600, 1000, "evergreen"),
+    ("journal-01", 1600, 1000, "graphite"),
+    ("journal-02", 1600, 1000, "onyx"),
+    ("journal-03", 1600, 1000, "slate"),
     # Social share card
-    ("og-cover", 1200, 630, "goldenhour"),
+    ("og-cover", 1200, 630, "graphite"),
 ]
 
 

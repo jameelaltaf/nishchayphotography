@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1067 1600" width="1067" height="1600" role="img" aria-hidden="true" preserveAspectRatio="xMidYMid slice">
   <defs>
     <linearGradient id="g" x1="37.8%" y1="98.5%" x2="62.2%" y2="1.5%">
-      <stop offset="0%" stop-color="#f0dfd8"/>
-      <stop offset="100%" stop-color="#d4a898"/>
+      <stop offset="0%" stop-color="#5e5e5e"/>
+      <stop offset="100%" stop-color="#a3a3a3"/>
     </linearGradient>
     <filter id="soft" x="-25%" y="-25%" width="150%" height="150%">
       <feGaussianBlur stdDeviation="120"/>
@@ -17,7 +17,7 @@
     </radialGradient>
   </defs>
   <rect width="1067" height="1600" fill="url(#g)"/>
-  <g filter="url(#soft)"><ellipse cx="505" cy="970" rx="658" ry="413" transform="rotate(44 505 970)" fill="#ffffff" opacity="0.48"/><ellipse cx="225" cy="1757" rx="859" ry="740" transform="rotate(60 225 1757)" fill="#f7e9e3" opacity="0.68"/><ellipse cx="681" cy="604" rx="666" ry="400" transform="rotate(86 681 604)" fill="#b07f6d" opacity="0.46"/></g>
+  <g filter="url(#soft)"><ellipse cx="505" cy="970" rx="658" ry="413" transform="rotate(44 505 970)" fill="#c4c4c4" opacity="0.48"/><ellipse cx="225" cy="1757" rx="859" ry="740" transform="rotate(60 225 1757)" fill="#e0e0e0" opacity="0.68"/><ellipse cx="681" cy="604" rx="666" ry="400" transform="rotate(86 681 604)" fill="#6f6f6f" opacity="0.46"/></g>
   <rect width="1067" height="1600" filter="url(#grain)" opacity="0.10" style="mix-blend-mode:overlay"/>
   <rect width="1067" height="1600" fill="url(#vig)"/>
 </svg>

@@ -5,6 +5,25 @@ it before pointing a domain at the site. Grep targets are given where useful.
 
 ## 1. Studio identity
 
+- [x] **Studio name** — now "Nish Impressions Studio" throughout, taken from the
+      logo in the shared Drive folder. `nishchayphotography.ca` is kept as the
+      domain and email host.
+- [x] **Logo** — the real vector logo is in `assets/brand/`, used in the header,
+      the footer and the favicon.
+- [~] **Photographs** — 7 slots now hold real studio work (the hero, the wide
+      feature, the social card, all three family/newborn slots and one journal
+      header), taken from the Drive folder and resized for web. 26 abstract
+      placeholders remain. The Drive connector used here caps out between 4 MB
+      and 9.8 MB per file and the remaining originals are 10-32 MB, so run
+      `tools/fetch_from_drive.py` locally to pull the rest.
+- [ ] **Hero video** — the hero is video-ready. Encode a short, silent,
+      web-sized MP4, drop it in `assets/video/`, and set `data-hero-src` on the
+      `<video>` in `src/pages/index.html`. While that attribute is empty no
+      request is made and the still crossfade runs instead.
+- [ ] **Captions on placeholder images** — the remaining `.svg` slots still
+      carry invented venue names (Distillery District, Casa Loma, Muskoka).
+      Replace those as each real photograph goes in.
+
 - [ ] **Domain** — `nishchayphotography.ca` appears in `build.py` (`SITE_URL`),
       `src/partials/base.html`, `robots.txt` and the JSON-LD blocks in
       `src/pages/`. Replace everywhere, then rebuild.
@@ -68,6 +87,9 @@ Every figure in `src/pages/services.html` is illustrative. Confirm all of them:
 ## 5. Photography
 
 - [ ] Replace all 32 files in `assets/img/` with real work (see README).
+      `tools/fetch_photos.py` can pull stand-ins from Pexels to preview the
+      layout, but stock photography must not remain on a live portfolio -
+      prospective clients judge the studio by what is on this page.
 - [ ] Rewrite every `alt` attribute to describe the actual photograph.
 - [ ] Update the figure captions, which currently name venues you may not have
       shot at (Distillery District, Casa Loma, Evergreen Brick Works, Muskoka,
@@ -86,6 +108,11 @@ Every figure in `src/pages/services.html` is illustrative. Confirm all of them:
 
 ## 7. Integrations
 
+- [ ] **Floating contact buttons** — on phones these collapse behind a single
+      launcher to keep the screen clear. If you add more contact channels,
+      keep the collapsed footprint small; two stacked buttons were measured
+      sitting on form fields and call-to-action buttons.
+
 - [ ] **Enquiry form** — add an `action` endpoint (README → Connecting the form)
       and set the success redirect to `/thank-you/`.
 - [ ] **Client galleries** — `https://nishchayphotography.pixieset.com/` in
@@ -96,6 +123,14 @@ Every figure in `src/pages/services.html` is illustrative. Confirm all of them:
       or remove them.
 - [ ] **Analytics** — nothing is installed. If you add any, the privacy notice
       already describes anonymised analytics; keep the two consistent.
+- [ ] **WhatsApp number** — the floating WhatsApp button and the assistant's
+      hand-off links both point at `wa.me/14165550142`, which is the fictional
+      placeholder number. Replace it in `src/partials/widgets.html` (two links)
+      and in `assets/js/main.js` (the `WHATSAPP` constant).
+- [ ] **Assistant answers** — the studio assistant repeats the pricing,
+      turnaround and travel figures published on the services page. If you
+      change any of those numbers, update the `TOPICS` object in
+      `assets/js/main.js` to match, or the two will disagree.
 
 ## 8. Legal
 
