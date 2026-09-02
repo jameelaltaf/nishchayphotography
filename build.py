@@ -17,6 +17,8 @@ Each page in src/pages/ starts with a small front-matter block:
     <section>...</section>
 """
 
+import html
+import json
 import os
 import re
 import shutil
@@ -112,18 +114,146 @@ def build_sitemap(outputs):
     )
 
 
+
+PACKAGES = os.path.join(ROOT, "data", "packages.json")
+
+
+def esc(text):
+    return html.escape(str(text), quote=False)
+
+
+def format_duration(package):
+    """'1-2 hours', '45 minutes', '2.5 hours' - whatever reads naturally."""
+    if package.get("durationLabel"):
+        return package["durationLabel"]
+    lo = package["durationMinMinutes"]
+    hi = package["durationMaxMinutes"]
+
+    def one(minutes):
+        if minutes < 60:
+            return f"{minutes} minutes"
+        hours = minutes / 60
+        return f"{hours:g} hour" + ("" if hours == 1 else "s")
+
+    if lo == hi:
+        return one(hi)
+    return f"{lo // 60}&ndash;{hi // 60} hours"
+
+
+def format_price(package):
+    price = f"${package['price']:,} CAD"
+    if package.get("pricingUnit"):
+        price += f" {package['pricingUnit']}"
+    return price
+
+
+def render_package(service, package):
+    """One pricing card, matching the .package markup the stylesheet expects."""
+    specs = [format_duration(package)]
+    setups = package.get("setups")
+    if setups and service.get("setupLabel") and not package.get("pricingUnit"):
+        label = service["setupLabel"].rstrip("s")
+        specs.append(f"{setups} {label}" + ("" if setups == 1 else "s"))
+    specs.append(f"{package['editedImages']} edited digital images")
+    if package.get("uneditedImagesRange"):
+        lo, hi = package["uneditedImagesRange"]
+        specs.append(f"{lo}&ndash;{hi} unedited images included")
+    specs += package.get("inclusions", [])
+    for note in package.get("clientResponsibilities", []):
+        specs.append(note)
+
+    featured = package.get("featured")
+    classes = "package package--featured reveal" if featured else "package reveal"
+    flag = '<span class="package__flag">Most booked</span>' if featured else ""
+    btn = "btn btn--light btn--block" if featured else "btn btn--ghost btn--block"
+    items = "\n".join(f"          <li>{esc(s)}</li>" for s in specs)
+
+    return f"""      <article class="{classes}">
+        {flag}
+        <p class="eyebrow">{esc(package['name'])}</p>
+        <span class="price-tag">{format_price(package)}</span>
+        <ul class="spec-list">
+{items}
+        </ul>
+        <a class="{btn}" href="/contact/?package={package['id']}">Check availability</a>
+      </article>"""
+
+
+def render_service(service):
+    cards = "\n\n".join(render_package(service, p) for p in service["packages"])
+
+    note = ""
+    if service.get("serviceNote"):
+        note = f'\n      <p class="note">{esc(service["serviceNote"])}</p>'
+
+    band = ""
+    age = service.get("ageBand")
+    if age:
+        band = (f'\n      <p class="note">Best photographed between '
+                f'{age["minDays"]} and {age["maxDays"]} days old.</p>')
+
+    extras = ""
+    if service.get("addOns"):
+        rows = "\n".join(
+            f"        <li>{esc(a['name'])} &mdash; ${a['price']:,} CAD</li>"
+            for a in service["addOns"])
+        extras = f"""
+
+    <div class="reveal" style="margin-top:clamp(2rem,4vw,3rem);max-width:60ch;">
+      <h3>Add-ons</h3>
+      <ul class="spec-list">
+{rows}
+      </ul>
+    </div>"""
+
+    grid = "grid grid--3" if len(service["packages"]) >= 3 else "grid grid--2"
+
+    return f"""<section class="section" id="{service['anchor']}">
+  <div class="wrap">
+    <div class="reveal" style="max-width:56ch;">
+      <p class="eyebrow">{esc(service['name'])}</p>
+      <h2 class="display">{esc(service['blurb'])}</h2>{note}{band}
+    </div>
+
+    <div class="{grid}" style="margin-top:clamp(2.5rem,5vw,4rem);align-items:stretch;">
+{cards}
+    </div>{extras}
+  </div>
+</section>"""
+
+
+def render_packages():
+    with open(PACKAGES, encoding="utf-8") as fh:
+        data = json.load(fh)
+    sections = [render_service(s) for s in data["services"]]
+    terms = "\n".join(
+        f"      <li>{esc(t)}</li>" for t in data["_meta"]["commonTerms"])
+    sections.append(f"""<section class="section section--paper">
+  <div class="wrap wrap--narrow">
+    <h2 class="display">Booking terms</h2>
+    <ul class="spec-list">
+{terms}
+    </ul>
+    <p class="note">{esc(data['_meta']['taxNote'].split('.')[0])}.</p>
+  </div>
+</section>""")
+    return "\n\n".join(sections)
+
+
 def main():
     base = read(os.path.join(PARTIALS, "base.html"))
     header = read(os.path.join(PARTIALS, "header.html"))
     footer = read(os.path.join(PARTIALS, "footer.html"))
     widgets = read(os.path.join(PARTIALS, "widgets.html"))
     lightbox = read(os.path.join(PARTIALS, "lightbox.html"))
+    packages_html = render_packages()
 
     outputs = []
     for filename in sorted(os.listdir(PAGES)):
         if not filename.endswith(".html"):
             continue
         meta, body = parse_front_matter(read(os.path.join(PAGES, filename)))
+        body = render(body, {"packages": packages_html})
         output = meta.get("output") or filename
         canonical = canonical_for(output)
 

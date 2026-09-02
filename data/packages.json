@@ -5,7 +5,8 @@
     "taxNote": "Prices exclude HST unless stated otherwise. Confirm with Nishchay.",
     "statusLegend": {
       "confirmed": "Transcribed from the studio's own flyers. Verify before publishing, but the numbers came from Nishchay.",
-      "draft": "INVENTED BY CLAUDE as a starting structure. Every price, duration and inclusion is a placeholder. Must NOT be published until Nishchay replaces the numbers."
+      "draft": "INVENTED BY CLAUDE as a starting structure. Every price, duration and inclusion is a placeholder. Must NOT be published until Nishchay replaces the numbers.",
+      "researched": "Priced from 2026 GTA competitor and market research (see pricingResearch). Structurally sound and market-aligned, but Nishchay has not confirmed them."
     },
     "openQuestions": [
       "Newborn in-studio has TWO price sets: $200/$300 (standard) and $250/$400 (Exclusive). Are these two live tiers, or old vs new pricing?",
@@ -23,16 +24,50 @@
       "All setups, props and outfits are provided for the session (exceptions noted per service).",
       "A $50 deposit is required to secure the appointment.",
       "Rescheduling must be done at least 24 hours prior to the scheduled appointment."
-    ]
+    ],
+    "pricingResearch": {
+      "date": "2026-09",
+      "region": "Mississauga / Brampton / GTA, Ontario",
+      "findings": [
+        "Toronto base wedding packages run CAD 3,500-7,000 for 8 hours; ~60% of studios sit at 3,000-4,000 for 8h with one photographer.",
+        "Budget tier (1,000-2,000) is newer photographers, 4-6h, single shooter, smaller gallery.",
+        "South Asian weddings: 2,500-6,500 for one shooter 8-10h; 4,000-10,000 with a second shooter; 10,000-20,000 for multi-day with album and same-day edit.",
+        "Brampton/Mississauga pricing runs 15-25% BELOW comparable Toronto-based photographers for the same coverage. This studio is in Mississauga, so it is priced into that band.",
+        "Engagement sessions: 300-600 typical; roughly 400 for 1h and 600 for 2h.",
+        "Headshots: mid-market 150-350 for 30-60min; premium 350-1,000+; team shoots 100-200 per person.",
+        "Commercial day rates in Canada: 800-5,000. Half day is 60-70% of a full day, not half. Licensing is charged on top; a perpetual licence costs 2-4x a one-year licence.",
+        "Newborn in the GTA starts around 345 and runs 635-695 for digital packages. Maternity starts around 275, ranging 260-560."
+      ],
+      "keyImplication": "The studio's own confirmed newborn pricing (200-400) sits BELOW the GTA market floor of ~345, and maternity (250-350) sits at the bottom of the 275-560 band. There is room to raise the existing baby/maternity prices, which is a bigger revenue lever than adding wedding work.",
+      "sources": [
+        "https://mangostudios.com/wedding-photography-prices/",
+        "https://www.bycalin.com/articles/planning-wedding/average-price-wedding-photography-toronto",
+        "https://www.irvinsidhu.com/blog/hindu-wedding-photographer-in-brampton-mississauga-the-complete-guide-2025-2026/",
+        "https://www.avangardphoto.com/blog/toronto-engagement-photography-prices/",
+        "https://speedyheadshots.com/resources/how-much-do-headshots-cost-toronto/",
+        "https://fotoreflection.com/headshot-pricing-in-ontario-a-2026-guide-to-professional-costs-value/",
+        "https://serapseker.com/2026/03/26/how-much-does-maternity-photography-cost-in-ontario-2026-guide/",
+        "https://www.maternityandnewborn.com/price/",
+        "https://www.sidestackers.com/blog/photographer-rates"
+      ]
+    }
   },
-
   "services": [
     {
       "id": "newborn-in-studio",
       "name": "Newborn — In-Studio",
       "status": "confirmed",
       "setupLabel": "themes",
-      "ageBand": { "minDays": 5, "maxDays": 20, "source": "client guidelines PDF", "conflictsWith": { "minDays": 7, "maxDays": 30, "source": "Nishchay's written brief" } },
+      "ageBand": {
+        "minDays": 5,
+        "maxDays": 20,
+        "source": "client guidelines PDF",
+        "conflictsWith": {
+          "minDays": 7,
+          "maxDays": 30,
+          "source": "Nishchay's written brief"
+        }
+      },
       "packages": [
         {
           "id": "little-love",
@@ -43,8 +78,13 @@
           "bookingBlockMinutes": 120,
           "setups": 2,
           "editedImages": 10,
-          "uneditedImagesRange": [30, 100],
-          "inclusions": ["Pictures with parents and sibling"]
+          "uneditedImagesRange": [
+            30,
+            100
+          ],
+          "inclusions": [
+            "Pictures with parents and sibling"
+          ]
         },
         {
           "id": "baby-bliss",
@@ -55,23 +95,43 @@
           "bookingBlockMinutes": 180,
           "setups": 4,
           "editedImages": 20,
-          "uneditedImagesRange": [50, 150],
-          "inclusions": ["Pictures with parents and sibling"]
+          "uneditedImagesRange": [
+            50,
+            150
+          ],
+          "inclusions": [
+            "Pictures with parents and sibling"
+          ],
+          "featured": true
         }
       ],
       "addOns": [
-        { "id": "grandparents", "name": "Pictures with grandparents or other relatives", "price": 50 },
-        { "id": "extra-edits-10", "name": "10 additional edited digital pictures", "price": 100 }
-      ]
+        {
+          "id": "grandparents",
+          "name": "Pictures with grandparents or other relatives",
+          "price": 50
+        },
+        {
+          "id": "extra-edits-10",
+          "name": "10 additional edited digital pictures",
+          "price": 100
+        }
+      ],
+      "anchor": "newborn",
+      "blurb": "Sessions in the Mississauga studio while your baby is at their sleepiest. All setups, props and outfits are provided.",
+      "order": 0
     },
-
     {
       "id": "newborn-in-studio-exclusive",
       "name": "Newborn — In-Studio Exclusive",
       "status": "confirmed",
       "setupLabel": "themes",
       "serviceNote": "Themes will be different and exclusive from in-home themes.",
-      "ageBand": { "minDays": 5, "maxDays": 20, "source": "client guidelines PDF" },
+      "ageBand": {
+        "minDays": 5,
+        "maxDays": 20,
+        "source": "client guidelines PDF"
+      },
       "packages": [
         {
           "id": "little-love-exclusive",
@@ -82,7 +142,9 @@
           "bookingBlockMinutes": 120,
           "setups": 2,
           "editedImages": 10,
-          "inclusions": ["Pictures with parents and sibling"]
+          "inclusions": [
+            "Pictures with parents and sibling"
+          ]
         },
         {
           "id": "baby-bliss-exclusive",
@@ -93,19 +155,28 @@
           "bookingBlockMinutes": 180,
           "setups": 4,
           "editedImages": 20,
-          "inclusions": ["Pictures with parents and sibling"]
+          "inclusions": [
+            "Pictures with parents and sibling"
+          ],
+          "featured": true
         }
       ],
-      "addOns": []
+      "addOns": [],
+      "anchor": "newborn-exclusive",
+      "blurb": "The same studio session using our exclusive theme sets — designs kept separate from the in-home collection.",
+      "order": 1
     },
-
     {
       "id": "newborn-twins-in-studio",
       "name": "Newborn Twins — In-Studio",
       "status": "confirmed",
       "setupLabel": "themes",
       "serviceNote": "The themes will be distinct and separate from those used in-home.",
-      "ageBand": { "minDays": 5, "maxDays": 20, "source": "client guidelines PDF" },
+      "ageBand": {
+        "minDays": 5,
+        "maxDays": 20,
+        "source": "client guidelines PDF"
+      },
       "packages": [
         {
           "id": "little-love-exclusive-twins",
@@ -116,8 +187,13 @@
           "bookingBlockMinutes": 120,
           "setups": 2,
           "editedImages": 15,
-          "uneditedImagesRange": [30, 100],
-          "inclusions": ["Pictures with parents and sibling"]
+          "uneditedImagesRange": [
+            30,
+            100
+          ],
+          "inclusions": [
+            "Pictures with parents and sibling"
+          ]
         },
         {
           "id": "baby-bliss-exclusive-twins",
@@ -128,85 +204,21 @@
           "bookingBlockMinutes": 180,
           "setups": 4,
           "editedImages": 30,
-          "uneditedImagesRange": [50, 150],
-          "inclusions": ["Pictures with parents and sibling"]
+          "uneditedImagesRange": [
+            50,
+            150
+          ],
+          "inclusions": [
+            "Pictures with parents and sibling"
+          ],
+          "featured": true
         }
       ],
-      "addOns": []
+      "addOns": [],
+      "anchor": "twins",
+      "blurb": "Built for two. Longer settling time, more hands, and the same exclusive studio themes.",
+      "order": 2
     },
-
-    {
-      "id": "family",
-      "name": "Family Photoshoot",
-      "status": "confirmed",
-      "setupLabel": "themes",
-      "packages": [
-        {
-          "id": "little-love-family",
-          "name": "Little Love",
-          "price": 200,
-          "durationMinMinutes": 45,
-          "durationMaxMinutes": 45,
-          "bookingBlockMinutes": 45,
-          "setups": 2,
-          "editedImages": 10,
-          "maxPeople": 4,
-          "inclusions": ["Maximum 4 people included"]
-        },
-        {
-          "id": "baby-bliss-family",
-          "name": "Baby Bliss",
-          "price": 300,
-          "durationMinMinutes": 90,
-          "durationMaxMinutes": 90,
-          "bookingBlockMinutes": 90,
-          "setups": 4,
-          "editedImages": 20,
-          "maxPeople": 8,
-          "inclusions": ["Maximum 8 people included"]
-        }
-      ],
-      "addOns": [
-        { "id": "extra-edits-10", "name": "10 additional edited digital pictures", "price": 100 }
-      ],
-      "termsOverride": ["All setups will be provided for the session."]
-    },
-
-    {
-      "id": "first-birthday",
-      "name": "1st Birthday",
-      "status": "confirmed",
-      "setupLabel": "theme setups",
-      "serviceNote": "Parents need to arrange the cake.",
-      "packages": [
-        {
-          "id": "little-love-birthday",
-          "name": "Little Love",
-          "price": 300,
-          "durationMinMinutes": 60,
-          "durationMaxMinutes": 120,
-          "bookingBlockMinutes": 120,
-          "setups": 2,
-          "editedImages": 10,
-          "inclusions": ["Includes cake smash", "Parents session included"],
-          "clientResponsibilities": ["Parents arrange the cake", "Parents arrange the outfits for baby as per the theme"]
-        },
-        {
-          "id": "baby-bliss-birthday",
-          "name": "Baby Bliss",
-          "price": 450,
-          "durationMinMinutes": 120,
-          "durationMaxMinutes": 180,
-          "bookingBlockMinutes": 180,
-          "setups": 4,
-          "editedImages": 20,
-          "inclusions": ["Includes cake smash", "Pictures with parents and siblings included"],
-          "clientResponsibilities": ["Parents arrange the cake", "Parents arrange the outfits for baby as per the theme"]
-        }
-      ],
-      "addOns": []
-    },
-
     {
       "id": "maternity",
       "name": "Maternity",
@@ -223,7 +235,11 @@
           "bookingBlockMinutes": 60,
           "setups": 1,
           "editedImages": 10,
-          "inclusions": ["Studio only", "1 outfit", "Online gallery"]
+          "inclusions": [
+            "Studio only",
+            "1 outfit",
+            "Online gallery"
+          ]
         },
         {
           "id": "bliss",
@@ -234,7 +250,13 @@
           "bookingBlockMinutes": 120,
           "setups": 2,
           "editedImages": 15,
-          "inclusions": ["Studio only", "2 outfits", "Couple session included", "Online gallery"]
+          "inclusions": [
+            "Studio only",
+            "2 outfits",
+            "Couple session included",
+            "Online gallery"
+          ],
+          "featured": true
         },
         {
           "id": "elegance",
@@ -245,172 +267,391 @@
           "bookingBlockMinutes": 150,
           "setups": 3,
           "editedImages": 20,
-          "inclusions": ["Studio only", "3 outfits", "Couple or family session included", "Online gallery"]
+          "inclusions": [
+            "Studio only",
+            "3 outfits",
+            "Couple or family session included",
+            "Online gallery"
+          ]
         }
       ],
-      "addOns": []
+      "addOns": [],
+      "anchor": "maternity",
+      "blurb": "Studio sessions before baby arrives, with outfits and couple or family portraits included.",
+      "order": 3
     },
-
+    {
+      "id": "first-birthday",
+      "name": "1st Birthday",
+      "status": "confirmed",
+      "setupLabel": "theme setups",
+      "serviceNote": "Parents need to arrange the cake.",
+      "packages": [
+        {
+          "id": "little-love-birthday",
+          "name": "Little Love",
+          "price": 300,
+          "durationMinMinutes": 60,
+          "durationMaxMinutes": 120,
+          "bookingBlockMinutes": 120,
+          "setups": 2,
+          "editedImages": 10,
+          "inclusions": [
+            "Includes cake smash",
+            "Parents session included"
+          ],
+          "clientResponsibilities": [
+            "Parents arrange the cake",
+            "Parents arrange the outfits for baby as per the theme"
+          ]
+        },
+        {
+          "id": "baby-bliss-birthday",
+          "name": "Baby Bliss",
+          "price": 450,
+          "durationMinMinutes": 120,
+          "durationMaxMinutes": 180,
+          "bookingBlockMinutes": 180,
+          "setups": 4,
+          "editedImages": 20,
+          "inclusions": [
+            "Includes cake smash",
+            "Pictures with parents and siblings included"
+          ],
+          "clientResponsibilities": [
+            "Parents arrange the cake",
+            "Parents arrange the outfits for baby as per the theme"
+          ],
+          "featured": true
+        }
+      ],
+      "addOns": [],
+      "anchor": "birthday",
+      "blurb": "Cake smash and theme setups for the first big milestone. Parents arrange the cake and baby's outfits.",
+      "order": 4
+    },
+    {
+      "id": "family",
+      "name": "Family Photoshoot",
+      "status": "confirmed",
+      "setupLabel": "themes",
+      "packages": [
+        {
+          "id": "little-love-family",
+          "name": "Little Love",
+          "price": 200,
+          "durationMinMinutes": 45,
+          "durationMaxMinutes": 45,
+          "bookingBlockMinutes": 45,
+          "setups": 2,
+          "editedImages": 10,
+          "maxPeople": 4,
+          "inclusions": [
+            "Maximum 4 people included"
+          ]
+        },
+        {
+          "id": "baby-bliss-family",
+          "name": "Baby Bliss",
+          "price": 300,
+          "durationMinMinutes": 90,
+          "durationMaxMinutes": 90,
+          "bookingBlockMinutes": 90,
+          "setups": 4,
+          "editedImages": 20,
+          "maxPeople": 8,
+          "inclusions": [
+            "Maximum 8 people included"
+          ],
+          "featured": true
+        }
+      ],
+      "addOns": [
+        {
+          "id": "extra-edits-10",
+          "name": "10 additional edited digital pictures",
+          "price": 100
+        }
+      ],
+      "termsOverride": [
+        "All setups will be provided for the session."
+      ],
+      "anchor": "families",
+      "blurb": "Short, well-paced studio sessions built around young children and real attention spans.",
+      "order": 5
+    },
     {
       "id": "weddings",
       "name": "Weddings",
-      "status": "draft",
+      "status": "researched",
       "setupLabel": "coverage hours",
-      "draftWarning": "INVENTED PLACEHOLDER PRICING. Structure modelled on the studio's real packages; every number needs replacing.",
       "packages": [
         {
-          "id": "wedding-intimate",
-          "name": "Intimate",
-          "price": 1200,
+          "id": "wedding-essential",
+          "name": "Essential",
+          "price": 1400,
           "durationMinMinutes": 240,
           "durationMaxMinutes": 240,
           "bookingBlockMinutes": 240,
           "setups": 1,
-          "editedImages": 150,
-          "inclusions": ["4 hours coverage", "One photographer", "Online gallery"]
-        },
-        {
-          "id": "wedding-classic",
-          "name": "Classic",
-          "price": 2200,
-          "durationMinMinutes": 480,
-          "durationMaxMinutes": 480,
-          "bookingBlockMinutes": 480,
-          "setups": 1,
-          "editedImages": 400,
-          "inclusions": ["8 hours coverage", "Photographer plus assistant", "Engagement session included", "Online gallery"]
+          "editedImages": 300,
+          "inclusions": [
+            "4 hours continuous coverage",
+            "One photographer",
+            "Online gallery",
+            "Personal print release"
+          ]
         },
         {
           "id": "wedding-signature",
           "name": "Signature",
-          "price": 3500,
+          "price": 2600,
+          "durationMinMinutes": 480,
+          "durationMaxMinutes": 480,
+          "bookingBlockMinutes": 480,
+          "setups": 1,
+          "editedImages": 600,
+          "inclusions": [
+            "8 hours continuous coverage",
+            "Photographer plus assistant",
+            "Engagement session included",
+            "Online gallery",
+            "Personal print release"
+          ],
+          "featured": true
+        },
+        {
+          "id": "wedding-full-story",
+          "name": "Full Story",
+          "price": 3800,
           "durationMinMinutes": 600,
           "durationMaxMinutes": 600,
           "bookingBlockMinutes": 600,
           "setups": 1,
-          "editedImages": 600,
-          "inclusions": ["10 hours coverage", "Two photographers", "Engagement session included", "Printed album", "Online gallery"]
+          "editedImages": 800,
+          "inclusions": [
+            "10 hours continuous coverage",
+            "Two photographers",
+            "Engagement session included",
+            "Printed album",
+            "Online gallery"
+          ]
+        },
+        {
+          "id": "wedding-multi-event",
+          "name": "Multi-Event",
+          "price": 5500,
+          "durationMinMinutes": 960,
+          "durationMaxMinutes": 960,
+          "bookingBlockMinutes": 960,
+          "setups": 1,
+          "editedImages": 1000,
+          "inclusions": [
+            "Two days of coverage across events such as mehndi, haldi, sangeet, ceremony and reception",
+            "Two photographers on the main day",
+            "Engagement session included",
+            "Printed album",
+            "Online gallery"
+          ],
+          "multiDay": true,
+          "durationLabel": "Two days of coverage"
         }
       ],
       "addOns": [
-        { "id": "extra-hour", "name": "Additional hour of coverage", "price": 250 },
-        { "id": "second-shooter", "name": "Second photographer", "price": 400 }
-      ]
+        {
+          "id": "extra-hour",
+          "name": "Additional hour of coverage",
+          "price": 250
+        },
+        {
+          "id": "second-photographer",
+          "name": "Second photographer",
+          "price": 450
+        },
+        {
+          "id": "album",
+          "name": "Printed album",
+          "price": 450
+        }
+      ],
+      "pricingBasis": "2026 GTA market research; Mississauga/Brampton band (15-25% below downtown Toronto).",
+      "anchor": "weddings",
+      "blurb": "Full-day and multi-event coverage across Mississauga, Brampton, Toronto and the wider GTA.",
+      "order": 6
     },
-
     {
       "id": "engagement-couples",
       "name": "Engagement & Couples",
-      "status": "draft",
+      "status": "researched",
       "setupLabel": "outfits",
-      "draftWarning": "INVENTED PLACEHOLDER PRICING.",
       "packages": [
         {
           "id": "couples-golden-hour",
           "name": "Golden Hour",
-          "price": 250,
+          "price": 350,
           "durationMinMinutes": 60,
           "durationMaxMinutes": 60,
           "bookingBlockMinutes": 60,
           "setups": 1,
-          "editedImages": 15,
-          "inclusions": ["One location", "One outfit", "Online gallery"]
+          "editedImages": 25,
+          "inclusions": [
+            "One location",
+            "One outfit",
+            "Online gallery"
+          ]
         },
         {
           "id": "couples-story",
           "name": "Story",
-          "price": 400,
+          "price": 550,
           "durationMinMinutes": 120,
           "durationMaxMinutes": 120,
           "bookingBlockMinutes": 120,
           "setups": 2,
-          "editedImages": 30,
-          "inclusions": ["Two locations or outfits", "Online gallery"]
+          "editedImages": 50,
+          "inclusions": [
+            "Two locations or outfits",
+            "Online gallery"
+          ],
+          "featured": true
         }
       ],
-      "addOns": []
+      "addOns": [],
+      "pricingBasis": "2026 GTA market research; Mississauga/Brampton band (15-25% below downtown Toronto).",
+      "anchor": "engagements",
+      "blurb": "A relaxed session that doubles as a rehearsal for how we'll work together on the day.",
+      "order": 7
     },
-
     {
       "id": "portraits-headshots",
       "name": "Portraits & Headshots",
-      "status": "draft",
+      "status": "researched",
       "setupLabel": "outfits",
-      "draftWarning": "INVENTED PLACEHOLDER PRICING.",
       "packages": [
         {
           "id": "headshot-essential",
           "name": "Essential",
-          "price": 150,
+          "price": 225,
           "durationMinMinutes": 30,
           "durationMaxMinutes": 30,
           "bookingBlockMinutes": 30,
           "setups": 1,
           "editedImages": 3,
-          "inclusions": ["Studio", "One outfit", "Online gallery"]
+          "inclusions": [
+            "Studio",
+            "One look",
+            "Online gallery"
+          ]
+        },
+        {
+          "id": "headshot-professional",
+          "name": "Professional",
+          "price": 375,
+          "durationMinMinutes": 60,
+          "durationMaxMinutes": 60,
+          "bookingBlockMinutes": 60,
+          "setups": 2,
+          "editedImages": 8,
+          "inclusions": [
+            "Studio",
+            "Two looks",
+            "Online gallery"
+          ],
+          "featured": true
         },
         {
           "id": "personal-brand",
           "name": "Personal Brand",
-          "price": 350,
+          "price": 550,
           "durationMinMinutes": 90,
           "durationMaxMinutes": 90,
           "bookingBlockMinutes": 90,
           "setups": 3,
           "editedImages": 20,
-          "inclusions": ["Studio", "Three outfits", "Online gallery"]
+          "inclusions": [
+            "Studio",
+            "Three looks",
+            "Online gallery"
+          ]
         },
         {
           "id": "team-headshots",
           "name": "Team",
-          "price": 500,
-          "durationMinMinutes": 240,
-          "durationMaxMinutes": 240,
-          "bookingBlockMinutes": 240,
+          "price": 120,
+          "durationMinMinutes": 20,
+          "durationMaxMinutes": 20,
+          "bookingBlockMinutes": 20,
           "setups": 1,
-          "editedImages": 30,
-          "maxPeople": 10,
-          "inclusions": ["Up to 10 people", "3 edited images per person", "Online gallery"]
+          "editedImages": 3,
+          "inclusions": [
+            "Priced per person, minimum five people",
+            "3 edited images per person",
+            "Online gallery"
+          ],
+          "pricingUnit": "per person",
+          "minPeople": 5
         }
       ],
-      "addOns": [
-        { "id": "extra-person", "name": "Additional person", "price": 40 }
-      ]
+      "addOns": [],
+      "pricingBasis": "2026 GTA market research; Mississauga/Brampton band (15-25% below downtown Toronto).",
+      "anchor": "portraits",
+      "blurb": "Headshots, personal branding and team libraries, photographed in the studio.",
+      "order": 8
     },
-
     {
       "id": "brand-commercial",
       "name": "Brand & Commercial",
-      "status": "draft",
+      "status": "researched",
       "setupLabel": "setups",
-      "draftWarning": "INVENTED PLACEHOLDER PRICING. Commercial work also needs a real licensing decision, not just a price.",
       "packages": [
         {
           "id": "brand-half-day",
           "name": "Half Day",
-          "price": 650,
+          "price": 850,
           "durationMinMinutes": 240,
           "durationMaxMinutes": 240,
           "bookingBlockMinutes": 240,
           "setups": 3,
           "editedImages": 30,
-          "inclusions": ["4 hours on location or in studio", "One year commercial licence", "Online gallery"]
+          "inclusions": [
+            "4 hours on location or in studio",
+            "One year commercial licence",
+            "Online gallery"
+          ]
         },
         {
           "id": "brand-full-day",
           "name": "Full Day",
-          "price": 1100,
+          "price": 1400,
           "durationMinMinutes": 480,
           "durationMaxMinutes": 480,
           "bookingBlockMinutes": 480,
           "setups": 6,
           "editedImages": 60,
-          "inclusions": ["8 hours on location or in studio", "One year commercial licence", "Online gallery"]
+          "inclusions": [
+            "8 hours on location or in studio",
+            "One year commercial licence",
+            "Online gallery"
+          ],
+          "featured": true
         }
       ],
       "addOns": [
-        { "id": "licence-extension", "name": "Licence extension, per additional year", "price": 300 }
-      ]
+        {
+          "id": "licence-extension",
+          "name": "Licence extension, per additional year",
+          "price": 350
+        },
+        {
+          "id": "perpetual-licence",
+          "name": "Perpetual licence",
+          "price": 2800
+        }
+      ],
+      "pricingBasis": "2026 GTA market research; Mississauga/Brampton band (15-25% below downtown Toronto).",
+      "anchor": "commercial",
+      "blurb": "Product, hospitality and team photography with a licence that matches how you'll use it.",
+      "order": 9
     }
   ]
 }
