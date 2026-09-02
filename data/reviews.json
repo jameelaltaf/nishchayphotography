@@ -1,0 +1,15 @@
+{
+  "_meta": {
+    "purpose": "Real Google reviews shown on the homepage. Populate ONLY with verbatim reviews copied from the studio's own Google Business profile. Never write, paraphrase, embellish or invent an entry here.",
+    "profileName": "Nish Impressions Studio & Photography",
+    "profileUrl": "",
+    "policy": [
+      "Only 5-star reviews are published, per Nishchay's instruction.",
+      "Text must be verbatim. Trim with an ellipsis if it is long, never reword.",
+      "The section does not render at all while this list is empty, so the homepage never shows a placeholder or an invented review.",
+      "No Review or AggregateRating schema is emitted. Google's structured-data policy disallows rich results for self-serving reviews (a business marking up reviews about itself), so the markup would earn nothing and risks a manual action."
+    ],
+    "howToFill": "For each review copy: author name as shown, the review text, and the month/year. Add {\"author\":\"\",\"text\":\"\",\"date\":\"\",\"rating\":5} objects to \"reviews\" below."
+  },
+  "reviews": []
+}

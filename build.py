@@ -222,6 +222,70 @@ def render_service(service):
 </section>"""
 
 
+
+REVIEWS = os.path.join(ROOT, "data", "reviews.json")
+
+
+def render_reviews():
+    """Google reviews block for the homepage.
+
+    Returns '' when there are no reviews, so the page simply omits the section
+    rather than shipping a placeholder. Nothing here invents review content:
+    every field comes straight from data/reviews.json.
+    """
+    with open(REVIEWS, encoding="utf-8") as fh:
+        data = json.load(fh)
+
+    reviews = [r for r in data.get("reviews", []) if int(r.get("rating", 0)) == 5]
+    if not reviews:
+        return ""
+
+    profile_url = data["_meta"].get("profileUrl", "")
+    stars = '<span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>'
+
+    cards = []
+    for r in reviews:
+        initial = esc(r["author"].strip()[:1].upper() or "&#8226;")
+        meta = esc(r.get("date", ""))
+        cards.append(f"""      <figure class="review reveal">
+        <div class="review__head">
+          <span class="review__avatar" aria-hidden="true">{initial}</span>
+          <div>
+            <figcaption class="review__author">{esc(r['author'])}</figcaption>
+            <p class="review__meta">{meta}</p>
+          </div>
+          <svg class="review__google" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18">
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/>
+            <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1 .7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1A12 12 0 0 0 12 24z"/>
+            <path fill="#FBBC05" d="M5.4 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.4a12 12 0 0 0 0 10.8l4-3.1z"/>
+            <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/>
+          </svg>
+        </div>
+        <blockquote>{esc(r['text'])}</blockquote>
+        <p class="review__rating">{stars}<span class="hp">Rated 5 out of 5</span></p>
+      </figure>""")
+
+    link = ""
+    if profile_url:
+        link = (f'\n    <p class="center" style="margin-top:clamp(2.5rem,5vw,3.5rem);">'
+                f'<a class="btn btn--ghost" href="{esc(profile_url)}" rel="noopener" target="_blank">'
+                f'Read every review on Google</a></p>')
+
+    joined = "\n\n".join(cards)
+    return f"""<section class="section section--paper">
+  <div class="wrap">
+    <div class="center reveal" style="max-width:60ch;margin-inline:auto;">
+      <p class="eyebrow">Reviews</p>
+      <h2 class="display">What clients say on Google</h2>
+    </div>
+
+    <div class="reviews" style="margin-top:clamp(2.5rem,5vw,3.5rem);">
+{joined}
+    </div>{link}
+  </div>
+</section>"""
+
+
 def render_packages():
     with open(PACKAGES, encoding="utf-8") as fh:
         data = json.load(fh)
@@ -247,13 +311,14 @@ def main():
     widgets = read(os.path.join(PARTIALS, "widgets.html"))
     lightbox = read(os.path.join(PARTIALS, "lightbox.html"))
     packages_html = render_packages()
+    reviews_html = render_reviews()
 
     outputs = []
     for filename in sorted(os.listdir(PAGES)):
         if not filename.endswith(".html"):
             continue
         meta, body = parse_front_matter(read(os.path.join(PAGES, filename)))
-        body = render(body, {"packages": packages_html})
+        body = render(body, {"packages": packages_html, "reviews": reviews_html})
         output = meta.get("output") or filename
         canonical = canonical_for(output)
 
