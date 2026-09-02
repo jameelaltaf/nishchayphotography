@@ -1,0 +1,416 @@
+{
+  "_meta": {
+    "purpose": "Single source of truth for services, packages, pricing and durations. The website and the future booking engine both read from this file so prices are never hardcoded in HTML again.",
+    "currency": "CAD",
+    "taxNote": "Prices exclude HST unless stated otherwise. Confirm with Nishchay.",
+    "statusLegend": {
+      "confirmed": "Transcribed from the studio's own flyers. Verify before publishing, but the numbers came from Nishchay.",
+      "draft": "INVENTED BY CLAUDE as a starting structure. Every price, duration and inclusion is a placeholder. Must NOT be published until Nishchay replaces the numbers."
+    },
+    "openQuestions": [
+      "Newborn in-studio has TWO price sets: $200/$300 (standard) and $250/$400 (Exclusive). Are these two live tiers, or old vs new pricing?",
+      "Age band conflict: Nishchay's brief said newborn is 7-30 days. His own client guidelines say 5-20 days. Which drives booking-form validation?",
+      "An in-home service is referenced on two flyers ('themes distinct and separate from those used in-home') but no in-home price list has been supplied.",
+      "Do the studio's real services include weddings / brand / commercial at all? The live website advertises them heavily; none of the supplied flyers mention them."
+    ],
+    "studio": {
+      "name": "Nish Impressions Studio",
+      "address": "230 Brunel Rd, Unit 3, Mississauga, ON L4Z1T5",
+      "phone": "514-649-7865",
+      "note": "The live website currently shows a fabricated Liberty Village, Toronto address and a fictional (416) 555-0142 number, in both the page copy and the schema.org structured data. Both need replacing with the values above."
+    },
+    "commonTerms": [
+      "All setups, props and outfits are provided for the session (exceptions noted per service).",
+      "A $50 deposit is required to secure the appointment.",
+      "Rescheduling must be done at least 24 hours prior to the scheduled appointment."
+    ]
+  },
+
+  "services": [
+    {
+      "id": "newborn-in-studio",
+      "name": "Newborn — In-Studio",
+      "status": "confirmed",
+      "setupLabel": "themes",
+      "ageBand": { "minDays": 5, "maxDays": 20, "source": "client guidelines PDF", "conflictsWith": { "minDays": 7, "maxDays": 30, "source": "Nishchay's written brief" } },
+      "packages": [
+        {
+          "id": "little-love",
+          "name": "Little Love",
+          "price": 200,
+          "durationMinMinutes": 60,
+          "durationMaxMinutes": 120,
+          "bookingBlockMinutes": 120,
+          "setups": 2,
+          "editedImages": 10,
+          "uneditedImagesRange": [30, 100],
+          "inclusions": ["Pictures with parents and sibling"]
+        },
+        {
+          "id": "baby-bliss",
+          "name": "Baby Bliss",
+          "price": 300,
+          "durationMinMinutes": 120,
+          "durationMaxMinutes": 180,
+          "bookingBlockMinutes": 180,
+          "setups": 4,
+          "editedImages": 20,
+          "uneditedImagesRange": [50, 150],
+          "inclusions": ["Pictures with parents and sibling"]
+        }
+      ],
+      "addOns": [
+        { "id": "grandparents", "name": "Pictures with grandparents or other relatives", "price": 50 },
+        { "id": "extra-edits-10", "name": "10 additional edited digital pictures", "price": 100 }
+      ]
+    },
+
+    {
+      "id": "newborn-in-studio-exclusive",
+      "name": "Newborn — In-Studio Exclusive",
+      "status": "confirmed",
+      "setupLabel": "themes",
+      "serviceNote": "Themes will be different and exclusive from in-home themes.",
+      "ageBand": { "minDays": 5, "maxDays": 20, "source": "client guidelines PDF" },
+      "packages": [
+        {
+          "id": "little-love-exclusive",
+          "name": "Little Love Exclusive",
+          "price": 250,
+          "durationMinMinutes": 60,
+          "durationMaxMinutes": 120,
+          "bookingBlockMinutes": 120,
+          "setups": 2,
+          "editedImages": 10,
+          "inclusions": ["Pictures with parents and sibling"]
+        },
+        {
+          "id": "baby-bliss-exclusive",
+          "name": "Baby Bliss Exclusive",
+          "price": 400,
+          "durationMinMinutes": 120,
+          "durationMaxMinutes": 180,
+          "bookingBlockMinutes": 180,
+          "setups": 4,
+          "editedImages": 20,
+          "inclusions": ["Pictures with parents and sibling"]
+        }
+      ],
+      "addOns": []
+    },
+
+    {
+      "id": "newborn-twins-in-studio",
+      "name": "Newborn Twins — In-Studio",
+      "status": "confirmed",
+      "setupLabel": "themes",
+      "serviceNote": "The themes will be distinct and separate from those used in-home.",
+      "ageBand": { "minDays": 5, "maxDays": 20, "source": "client guidelines PDF" },
+      "packages": [
+        {
+          "id": "little-love-exclusive-twins",
+          "name": "Little Love Exclusive",
+          "price": 400,
+          "durationMinMinutes": 60,
+          "durationMaxMinutes": 120,
+          "bookingBlockMinutes": 120,
+          "setups": 2,
+          "editedImages": 15,
+          "uneditedImagesRange": [30, 100],
+          "inclusions": ["Pictures with parents and sibling"]
+        },
+        {
+          "id": "baby-bliss-exclusive-twins",
+          "name": "Baby Bliss Exclusive",
+          "price": 600,
+          "durationMinMinutes": 120,
+          "durationMaxMinutes": 180,
+          "bookingBlockMinutes": 180,
+          "setups": 4,
+          "editedImages": 30,
+          "uneditedImagesRange": [50, 150],
+          "inclusions": ["Pictures with parents and sibling"]
+        }
+      ],
+      "addOns": []
+    },
+
+    {
+      "id": "family",
+      "name": "Family Photoshoot",
+      "status": "confirmed",
+      "setupLabel": "themes",
+      "packages": [
+        {
+          "id": "little-love-family",
+          "name": "Little Love",
+          "price": 200,
+          "durationMinMinutes": 45,
+          "durationMaxMinutes": 45,
+          "bookingBlockMinutes": 45,
+          "setups": 2,
+          "editedImages": 10,
+          "maxPeople": 4,
+          "inclusions": ["Maximum 4 people included"]
+        },
+        {
+          "id": "baby-bliss-family",
+          "name": "Baby Bliss",
+          "price": 300,
+          "durationMinMinutes": 90,
+          "durationMaxMinutes": 90,
+          "bookingBlockMinutes": 90,
+          "setups": 4,
+          "editedImages": 20,
+          "maxPeople": 8,
+          "inclusions": ["Maximum 8 people included"]
+        }
+      ],
+      "addOns": [
+        { "id": "extra-edits-10", "name": "10 additional edited digital pictures", "price": 100 }
+      ],
+      "termsOverride": ["All setups will be provided for the session."]
+    },
+
+    {
+      "id": "first-birthday",
+      "name": "1st Birthday",
+      "status": "confirmed",
+      "setupLabel": "theme setups",
+      "serviceNote": "Parents need to arrange the cake.",
+      "packages": [
+        {
+          "id": "little-love-birthday",
+          "name": "Little Love",
+          "price": 300,
+          "durationMinMinutes": 60,
+          "durationMaxMinutes": 120,
+          "bookingBlockMinutes": 120,
+          "setups": 2,
+          "editedImages": 10,
+          "inclusions": ["Includes cake smash", "Parents session included"],
+          "clientResponsibilities": ["Parents arrange the cake", "Parents arrange the outfits for baby as per the theme"]
+        },
+        {
+          "id": "baby-bliss-birthday",
+          "name": "Baby Bliss",
+          "price": 450,
+          "durationMinMinutes": 120,
+          "durationMaxMinutes": 180,
+          "bookingBlockMinutes": 180,
+          "setups": 4,
+          "editedImages": 20,
+          "inclusions": ["Includes cake smash", "Pictures with parents and siblings included"],
+          "clientResponsibilities": ["Parents arrange the cake", "Parents arrange the outfits for baby as per the theme"]
+        }
+      ],
+      "addOns": []
+    },
+
+    {
+      "id": "maternity",
+      "name": "Maternity",
+      "status": "confirmed",
+      "setupLabel": "outfits",
+      "serviceNote": "Studio only.",
+      "packages": [
+        {
+          "id": "serenity",
+          "name": "Serenity",
+          "price": 250,
+          "durationMinMinutes": 60,
+          "durationMaxMinutes": 60,
+          "bookingBlockMinutes": 60,
+          "setups": 1,
+          "editedImages": 10,
+          "inclusions": ["Studio only", "1 outfit", "Online gallery"]
+        },
+        {
+          "id": "bliss",
+          "name": "Bliss",
+          "price": 300,
+          "durationMinMinutes": 120,
+          "durationMaxMinutes": 120,
+          "bookingBlockMinutes": 120,
+          "setups": 2,
+          "editedImages": 15,
+          "inclusions": ["Studio only", "2 outfits", "Couple session included", "Online gallery"]
+        },
+        {
+          "id": "elegance",
+          "name": "Elegance",
+          "price": 350,
+          "durationMinMinutes": 150,
+          "durationMaxMinutes": 150,
+          "bookingBlockMinutes": 150,
+          "setups": 3,
+          "editedImages": 20,
+          "inclusions": ["Studio only", "3 outfits", "Couple or family session included", "Online gallery"]
+        }
+      ],
+      "addOns": []
+    },
+
+    {
+      "id": "weddings",
+      "name": "Weddings",
+      "status": "draft",
+      "setupLabel": "coverage hours",
+      "draftWarning": "INVENTED PLACEHOLDER PRICING. Structure modelled on the studio's real packages; every number needs replacing.",
+      "packages": [
+        {
+          "id": "wedding-intimate",
+          "name": "Intimate",
+          "price": 1200,
+          "durationMinMinutes": 240,
+          "durationMaxMinutes": 240,
+          "bookingBlockMinutes": 240,
+          "setups": 1,
+          "editedImages": 150,
+          "inclusions": ["4 hours coverage", "One photographer", "Online gallery"]
+        },
+        {
+          "id": "wedding-classic",
+          "name": "Classic",
+          "price": 2200,
+          "durationMinMinutes": 480,
+          "durationMaxMinutes": 480,
+          "bookingBlockMinutes": 480,
+          "setups": 1,
+          "editedImages": 400,
+          "inclusions": ["8 hours coverage", "Photographer plus assistant", "Engagement session included", "Online gallery"]
+        },
+        {
+          "id": "wedding-signature",
+          "name": "Signature",
+          "price": 3500,
+          "durationMinMinutes": 600,
+          "durationMaxMinutes": 600,
+          "bookingBlockMinutes": 600,
+          "setups": 1,
+          "editedImages": 600,
+          "inclusions": ["10 hours coverage", "Two photographers", "Engagement session included", "Printed album", "Online gallery"]
+        }
+      ],
+      "addOns": [
+        { "id": "extra-hour", "name": "Additional hour of coverage", "price": 250 },
+        { "id": "second-shooter", "name": "Second photographer", "price": 400 }
+      ]
+    },
+
+    {
+      "id": "engagement-couples",
+      "name": "Engagement & Couples",
+      "status": "draft",
+      "setupLabel": "outfits",
+      "draftWarning": "INVENTED PLACEHOLDER PRICING.",
+      "packages": [
+        {
+          "id": "couples-golden-hour",
+          "name": "Golden Hour",
+          "price": 250,
+          "durationMinMinutes": 60,
+          "durationMaxMinutes": 60,
+          "bookingBlockMinutes": 60,
+          "setups": 1,
+          "editedImages": 15,
+          "inclusions": ["One location", "One outfit", "Online gallery"]
+        },
+        {
+          "id": "couples-story",
+          "name": "Story",
+          "price": 400,
+          "durationMinMinutes": 120,
+          "durationMaxMinutes": 120,
+          "bookingBlockMinutes": 120,
+          "setups": 2,
+          "editedImages": 30,
+          "inclusions": ["Two locations or outfits", "Online gallery"]
+        }
+      ],
+      "addOns": []
+    },
+
+    {
+      "id": "portraits-headshots",
+      "name": "Portraits & Headshots",
+      "status": "draft",
+      "setupLabel": "outfits",
+      "draftWarning": "INVENTED PLACEHOLDER PRICING.",
+      "packages": [
+        {
+          "id": "headshot-essential",
+          "name": "Essential",
+          "price": 150,
+          "durationMinMinutes": 30,
+          "durationMaxMinutes": 30,
+          "bookingBlockMinutes": 30,
+          "setups": 1,
+          "editedImages": 3,
+          "inclusions": ["Studio", "One outfit", "Online gallery"]
+        },
+        {
+          "id": "personal-brand",
+          "name": "Personal Brand",
+          "price": 350,
+          "durationMinMinutes": 90,
+          "durationMaxMinutes": 90,
+          "bookingBlockMinutes": 90,
+          "setups": 3,
+          "editedImages": 20,
+          "inclusions": ["Studio", "Three outfits", "Online gallery"]
+        },
+        {
+          "id": "team-headshots",
+          "name": "Team",
+          "price": 500,
+          "durationMinMinutes": 240,
+          "durationMaxMinutes": 240,
+          "bookingBlockMinutes": 240,
+          "setups": 1,
+          "editedImages": 30,
+          "maxPeople": 10,
+          "inclusions": ["Up to 10 people", "3 edited images per person", "Online gallery"]
+        }
+      ],
+      "addOns": [
+        { "id": "extra-person", "name": "Additional person", "price": 40 }
+      ]
+    },
+
+    {
+      "id": "brand-commercial",
+      "name": "Brand & Commercial",
+      "status": "draft",
+      "setupLabel": "setups",
+      "draftWarning": "INVENTED PLACEHOLDER PRICING. Commercial work also needs a real licensing decision, not just a price.",
+      "packages": [
+        {
+          "id": "brand-half-day",
+          "name": "Half Day",
+          "price": 650,
+          "durationMinMinutes": 240,
+          "durationMaxMinutes": 240,
+          "bookingBlockMinutes": 240,
+          "setups": 3,
+          "editedImages": 30,
+          "inclusions": ["4 hours on location or in studio", "One year commercial licence", "Online gallery"]
+        },
+        {
+          "id": "brand-full-day",
+          "name": "Full Day",
+          "price": 1100,
+          "durationMinMinutes": 480,
+          "durationMaxMinutes": 480,
+          "bookingBlockMinutes": 480,
+          "setups": 6,
+          "editedImages": 60,
+          "inclusions": ["8 hours on location or in studio", "One year commercial licence", "Online gallery"]
+        }
+      ],
+      "addOns": [
+        { "id": "licence-extension", "name": "Licence extension, per additional year", "price": 300 }
+      ]
+    }
+  ]
+}
