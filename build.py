@@ -17,6 +17,8 @@ Each page in src/pages/ starts with a small front-matter block:
     <section>...</section>
 """
 
+import html
+import json
 import os
 import re
 import shutil
@@ -112,18 +114,211 @@ def build_sitemap(outputs):
     )
 
 
+
+PACKAGES = os.path.join(ROOT, "data", "packages.json")
+
+
+def esc(text):
+    return html.escape(str(text), quote=False)
+
+
+def format_duration(package):
+    """'1-2 hours', '45 minutes', '2.5 hours' - whatever reads naturally."""
+    if package.get("durationLabel"):
+        return package["durationLabel"]
+    lo = package["durationMinMinutes"]
+    hi = package["durationMaxMinutes"]
+
+    def one(minutes):
+        if minutes < 60:
+            return f"{minutes} minutes"
+        hours = minutes / 60
+        return f"{hours:g} hour" + ("" if hours == 1 else "s")
+
+    if lo == hi:
+        return one(hi)
+    return f"{lo // 60}&ndash;{hi // 60} hours"
+
+
+def format_price(package):
+    price = f"${package['price']:,} CAD"
+    if package.get("pricingUnit"):
+        price += f" {package['pricingUnit']}"
+    return price
+
+
+def render_package(service, package):
+    """One pricing card, matching the .package markup the stylesheet expects."""
+    specs = [format_duration(package)]
+    setups = package.get("setups")
+    if setups and service.get("setupLabel") and not package.get("pricingUnit"):
+        label = service["setupLabel"].rstrip("s")
+        specs.append(f"{setups} {label}" + ("" if setups == 1 else "s"))
+    specs.append(f"{package['editedImages']} edited digital images")
+    if package.get("uneditedImagesRange"):
+        lo, hi = package["uneditedImagesRange"]
+        specs.append(f"{lo}&ndash;{hi} unedited images included")
+    specs += package.get("inclusions", [])
+    for note in package.get("clientResponsibilities", []):
+        specs.append(note)
+
+    featured = package.get("featured")
+    classes = "package package--featured reveal" if featured else "package reveal"
+    flag = '<span class="package__flag">Most booked</span>' if featured else ""
+    btn = "btn btn--light btn--block" if featured else "btn btn--ghost btn--block"
+    items = "\n".join(f"          <li>{esc(s)}</li>" for s in specs)
+
+    return f"""      <article class="{classes}">
+        {flag}
+        <p class="eyebrow">{esc(package['name'])}</p>
+        <span class="price-tag">{format_price(package)}</span>
+        <ul class="spec-list">
+{items}
+        </ul>
+        <a class="{btn}" href="/contact/?package={package['id']}">Check availability</a>
+      </article>"""
+
+
+def render_service(service):
+    cards = "\n\n".join(render_package(service, p) for p in service["packages"])
+
+    note = ""
+    if service.get("serviceNote"):
+        note = f'\n      <p class="note">{esc(service["serviceNote"])}</p>'
+
+    band = ""
+    age = service.get("ageBand")
+    if age:
+        band = (f'\n      <p class="note">Best photographed between '
+                f'{age["minDays"]} and {age["maxDays"]} days old.</p>')
+
+    extras = ""
+    if service.get("addOns"):
+        rows = "\n".join(
+            f"        <li>{esc(a['name'])} &mdash; ${a['price']:,} CAD</li>"
+            for a in service["addOns"])
+        extras = f"""
+
+    <div class="reveal" style="margin-top:clamp(2rem,4vw,3rem);max-width:60ch;">
+      <h3>Add-ons</h3>
+      <ul class="spec-list">
+{rows}
+      </ul>
+    </div>"""
+
+    grid = "grid grid--3" if len(service["packages"]) >= 3 else "grid grid--2"
+
+    return f"""<section class="section" id="{service['anchor']}">
+  <div class="wrap">
+    <div class="reveal" style="max-width:56ch;">
+      <p class="eyebrow">{esc(service['name'])}</p>
+      <h2 class="display">{esc(service['blurb'])}</h2>{note}{band}
+    </div>
+
+    <div class="{grid}" style="margin-top:clamp(2.5rem,5vw,4rem);align-items:stretch;">
+{cards}
+    </div>{extras}
+  </div>
+</section>"""
+
+
+
+REVIEWS = os.path.join(ROOT, "data", "reviews.json")
+
+
+def render_reviews():
+    """Google reviews block for the homepage.
+
+    Returns '' when there are no reviews, so the page simply omits the section
+    rather than shipping a placeholder. Nothing here invents review content:
+    every field comes straight from data/reviews.json.
+    """
+    with open(REVIEWS, encoding="utf-8") as fh:
+        data = json.load(fh)
+
+    reviews = [r for r in data.get("reviews", []) if int(r.get("rating", 0)) == 5]
+    if not reviews:
+        return ""
+
+    profile_url = data["_meta"].get("profileUrl", "")
+    stars = '<span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>'
+
+    cards = []
+    for r in reviews:
+        initial = esc(r["author"].strip()[:1].upper() or "&#8226;")
+        meta = esc(r.get("date", ""))
+        cards.append(f"""      <figure class="review reveal">
+        <div class="review__head">
+          <span class="review__avatar" aria-hidden="true">{initial}</span>
+          <div>
+            <figcaption class="review__author">{esc(r['author'])}</figcaption>
+            <p class="review__meta">{meta}</p>
+          </div>
+          <svg class="review__google" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18">
+            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/>
+            <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1 .7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1A12 12 0 0 0 12 24z"/>
+            <path fill="#FBBC05" d="M5.4 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.4a12 12 0 0 0 0 10.8l4-3.1z"/>
+            <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/>
+          </svg>
+        </div>
+        <blockquote>{esc(r['text'])}</blockquote>
+        <p class="review__rating">{stars}<span class="hp">Rated 5 out of 5</span></p>
+      </figure>""")
+
+    link = ""
+    if profile_url:
+        link = (f'\n    <p class="center" style="margin-top:clamp(2.5rem,5vw,3.5rem);">'
+                f'<a class="btn btn--ghost" href="{esc(profile_url)}" rel="noopener" target="_blank">'
+                f'Read every review on Google</a></p>')
+
+    joined = "\n\n".join(cards)
+    return f"""<section class="section section--paper">
+  <div class="wrap">
+    <div class="center reveal" style="max-width:60ch;margin-inline:auto;">
+      <p class="eyebrow">Reviews</p>
+      <h2 class="display">What clients say on Google</h2>
+    </div>
+
+    <div class="reviews" style="margin-top:clamp(2.5rem,5vw,3.5rem);">
+{joined}
+    </div>{link}
+  </div>
+</section>"""
+
+
+def render_packages():
+    with open(PACKAGES, encoding="utf-8") as fh:
+        data = json.load(fh)
+    sections = [render_service(s) for s in data["services"]]
+    terms = "\n".join(
+        f"      <li>{esc(t)}</li>" for t in data["_meta"]["commonTerms"])
+    sections.append(f"""<section class="section section--paper">
+  <div class="wrap wrap--narrow">
+    <h2 class="display">Booking terms</h2>
+    <ul class="spec-list">
+{terms}
+    </ul>
+    <p class="note">{esc(data['_meta']['taxNote'].split('.')[0])}.</p>
+  </div>
+</section>""")
+    return "\n\n".join(sections)
+
+
 def main():
     base = read(os.path.join(PARTIALS, "base.html"))
     header = read(os.path.join(PARTIALS, "header.html"))
     footer = read(os.path.join(PARTIALS, "footer.html"))
     widgets = read(os.path.join(PARTIALS, "widgets.html"))
     lightbox = read(os.path.join(PARTIALS, "lightbox.html"))
+    packages_html = render_packages()
+    reviews_html = render_reviews()
 
     outputs = []
     for filename in sorted(os.listdir(PAGES)):
         if not filename.endswith(".html"):
             continue
         meta, body = parse_front_matter(read(os.path.join(PAGES, filename)))
+        body = render(body, {"packages": packages_html, "reviews": reviews_html})
         output = meta.get("output") or filename
         canonical = canonical_for(output)
 
