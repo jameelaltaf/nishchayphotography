@@ -227,11 +227,14 @@ REVIEWS = os.path.join(ROOT, "data", "reviews.json")
 
 
 def render_reviews():
-    """Google reviews block for the homepage.
+    """Rotating Google reviews slideshow for the homepage.
 
-    Returns '' when there are no reviews, so the page simply omits the section
-    rather than shipping a placeholder. Nothing here invents review content:
-    every field comes straight from data/reviews.json.
+    Returns '' when there are no reviews, so the page omits the section rather
+    than shipping a placeholder. Every field comes straight from
+    data/reviews.json - nothing here invents or edits review content.
+
+    Markup degrades without JS: the track is a plain list, so all reviews are
+    readable when the slider never initialises.
     """
     with open(REVIEWS, encoding="utf-8") as fh:
         data = json.load(fh)
@@ -240,47 +243,71 @@ def render_reviews():
     if not reviews:
         return ""
 
-    profile_url = data["_meta"].get("profileUrl", "")
-    stars = '<span class="stars" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span>'
+    meta = data["_meta"]
+    profile_url = meta.get("profileUrl", "")
+    stars = "&#9733;" * 5
 
-    cards = []
-    for r in reviews:
-        initial = esc(r["author"].strip()[:1].upper() or "&#8226;")
-        meta = esc(r.get("date", ""))
-        cards.append(f"""      <figure class="review reveal">
-        <div class="review__head">
-          <span class="review__avatar" aria-hidden="true">{initial}</span>
-          <div>
-            <figcaption class="review__author">{esc(r['author'])}</figcaption>
-            <p class="review__meta">{meta}</p>
-          </div>
-          <svg class="review__google" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="18" height="18">
-            <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/>
-            <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1 .7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1A12 12 0 0 0 12 24z"/>
-            <path fill="#FBBC05" d="M5.4 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.4a12 12 0 0 0 0 10.8l4-3.1z"/>
-            <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/>
-          </svg>
-        </div>
-        <blockquote>{esc(r['text'])}</blockquote>
-        <p class="review__rating">{stars}<span class="hp">Rated 5 out of 5</span></p>
-      </figure>""")
+    slides, dots = [], []
+    for i, r in enumerate(reviews):
+        initial = esc(r["author"].strip()[:1].upper()) or "&#8226;"
+        slides.append(f"""        <li class="revslide" data-review-slide{' aria-hidden="true"' if i else ''}>
+          <figure class="review">
+            <div class="review__head">
+              <span class="review__avatar" aria-hidden="true">{initial}</span>
+              <div>
+                <figcaption class="review__author">{esc(r['author'])}</figcaption>
+                <p class="review__meta">{esc(r.get('date',''))} &middot; on Google</p>
+              </div>
+              <svg class="review__google" viewBox="0 0 24 24" aria-hidden="true" focusable="false" width="20" height="20">
+                <path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.5h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.8z"/>
+                <path fill="#34A853" d="M12 24c3.2 0 5.9-1.1 7.9-2.9l-3.9-3c-1 .7-2.4 1.1-4 1.1-3.1 0-5.7-2.1-6.6-4.9H1.4v3.1A12 12 0 0 0 12 24z"/>
+                <path fill="#FBBC05" d="M5.4 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.4a12 12 0 0 0 0 10.8l4-3.1z"/>
+                <path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.4 6.6l4 3.1C6.3 6.9 8.9 4.8 12 4.8z"/>
+              </svg>
+            </div>
+            <p class="review__rating"><span class="stars" aria-hidden="true">{stars}</span><span class="hp">Rated 5 out of 5</span></p>
+            <blockquote>{esc(r['text'])}</blockquote>
+          </figure>
+        </li>""")
+        dots.append(f'        <button type="button" data-review-dot aria-pressed="{"true" if i == 0 else "false"}">'
+                    f'<span class="hp">Show review {i + 1}, {esc(r["author"])}</span></button>')
 
     link = ""
     if profile_url:
-        link = (f'\n    <p class="center" style="margin-top:clamp(2.5rem,5vw,3.5rem);">'
+        link = (f'\n    <p class="center" style="margin-top:clamp(2rem,4vw,3rem);">'
                 f'<a class="btn btn--ghost" href="{esc(profile_url)}" rel="noopener" target="_blank">'
-                f'Read every review on Google</a></p>')
+                f'Read our reviews on Google</a></p>')
 
-    joined = "\n\n".join(cards)
-    return f"""<section class="section section--paper">
+    count = len(reviews)
+    joined = "\n".join(slides)
+    joined_dots = "\n".join(dots)
+
+    return f"""<section class="section section--paper" id="reviews">
   <div class="wrap">
     <div class="center reveal" style="max-width:60ch;margin-inline:auto;">
       <p class="eyebrow">Reviews</p>
       <h2 class="display">What clients say on Google</h2>
+      <p class="note"><span class="stars" aria-hidden="true">{stars}</span>
+        {count} five-star reviews from families we have photographed.</p>
     </div>
 
-    <div class="reviews" style="margin-top:clamp(2.5rem,5vw,3.5rem);">
+    <div class="revslider" data-reviews
+         role="group" aria-roledescription="carousel" aria-label="Client reviews from Google">
+      <div class="revslider__viewport">
+        <ul class="revslider__track" data-reviews-track>
 {joined}
+        </ul>
+      </div>
+
+      <div class="revslider__controls">
+        <button class="revslider__nav" type="button" data-reviews-prev aria-label="Previous review">&#8592;</button>
+        <div class="revslider__dots" data-reviews-dots role="group" aria-label="Choose a review">
+{joined_dots}
+        </div>
+        <button class="revslider__nav" type="button" data-reviews-next aria-label="Next review">&#8594;</button>
+      </div>
+
+      <p class="hp" data-reviews-status role="status" aria-live="polite"></p>
     </div>{link}
   </div>
 </section>"""

@@ -2,14 +2,48 @@
   "_meta": {
     "purpose": "Real Google reviews shown on the homepage. Populate ONLY with verbatim reviews copied from the studio's own Google Business profile. Never write, paraphrase, embellish or invent an entry here.",
     "profileName": "Nish Impressions Studio & Photography",
-    "profileUrl": "",
+    "profileUrl": "https://www.google.com/maps/search/?api=1&query=Nish%20Impressions%20Studio%20%26%20Photography%2C%20230%20Brunel%20Rd%20Unit%203%2C%20Mississauga%2C%20ON%20L4Z1T5",
+    "profileUrlNote": "This is Google's documented Maps search-by-name-and-address URL, which resolves to the studio's profile. Replace it with the canonical profile link from the Google Business Profile dashboard (Share -> copy link, usually a g.page/... or maps.app.goo.gl/... URL) when available.",
     "policy": [
       "Only 5-star reviews are published, per Nishchay's instruction.",
-      "Text must be verbatim. Trim with an ellipsis if it is long, never reword.",
+      "Text is verbatim, including the reviewers' own typos and punctuation. Editing a review's wording would misrepresent what the person actually wrote.",
       "The section does not render at all while this list is empty, so the homepage never shows a placeholder or an invented review.",
-      "No Review or AggregateRating schema is emitted. Google's structured-data policy disallows rich results for self-serving reviews (a business marking up reviews about itself), so the markup would earn nothing and risks a manual action."
+      "No Review or AggregateRating schema is emitted. Google's structured-data policy disallows rich results for self-serving reviews (a business marking up reviews about itself), so the markup would earn nothing and risks a manual action.",
+      "Array order is display order, not chronological. Reorder freely."
     ],
-    "howToFill": "For each review copy: author name as shown, the review text, and the month/year. Add {\"author\":\"\",\"text\":\"\",\"date\":\"\",\"rating\":5} objects to \"reviews\" below."
+    "datesNote": "Google showed these as relative ages ('7 months ago'). Converted to absolute months against 3 September 2026 so they do not go stale on the page. Accurate to within a month.",
+    "howToFill": "Add {\"author\":\"\",\"text\":\"\",\"date\":\"\",\"rating\":5} objects to \"reviews\" below."
   },
-  "reviews": []
+  "reviews": [
+    {
+      "author": "Harpreet Sandhu",
+      "date": "February 2026",
+      "rating": 5,
+      "text": "We had an amazing experience with Nish Photography for our one-month-old daughter’s photoshoot. Nish was incredibly patient, gentle, and professional, which made us feel completely at ease as new parents. The way they handled our baby and captured such beautiful, natural moments was truly impressive. The photos turned out absolutely stunning—every picture reflects so much love and care. We will cherish these memories forever. Highly recommend Nish Photography to anyone looking for newborn or family photography. Thank you for such a wonderful experience!"
+    },
+    {
+      "author": "Linsa Chacko",
+      "date": "April 2026",
+      "rating": 5,
+      "text": "Had an awesome experience at Nish Photography & Studio today for our new born photoshoot. They handled our 16 day old baby girl so gently and patiently. Within the time slot , we were able to complete the planned session. They were so professional at whatever they did. I highly recommend this studio to everyone looking to do a photo session with a new born."
+    },
+    {
+      "author": "Zakia Arsalan",
+      "date": "May 2026",
+      "rating": 5,
+      "text": "We recently had a baby photoshoot and it was such a wonderful experience from start to finish. Nishchay was incredibly patient, gentle, and understanding with our little one, which made the whole session feel relaxed and stress-free. We’re so happy we chose them and would highly recommend their services to anyone looking to capture precious memories of their baby."
+    },
+    {
+      "author": "Maha Alsoofi",
+      "date": "June 2026",
+      "rating": 5,
+      "text": "Nish and his asociate were so calm and good with babies and at their job. They arw so friendly and made a session which can make one nervous seem so easy and smooth. Reasonable pricing as well compared to many other places. Definitely recommend. Thank you"
+    },
+    {
+      "author": "Apple Jean Dunne",
+      "date": "August 2026",
+      "rating": 5,
+      "text": "Overall experience was wonderful. They are very patient and caring . I highly recommend this studio to anyone looking for quality of work that won’t break your bank."
+    }
+  ]
 }
