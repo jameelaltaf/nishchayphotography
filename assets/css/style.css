@@ -952,128 +952,138 @@ html:not(.js) .carousel3d__controls, html:not(.js) .carousel3d__hint { display: 
 }
 
 /* ---------------------------------------------------------------------------
-   Google reviews slideshow
+   Google reviews band
    Rendered by build.py from data/reviews.json; the section is omitted entirely
    when there are no reviews, so these rules only ever apply to real content.
 --------------------------------------------------------------------------- */
+.reviews-band { overflow: hidden; }        /* the track bleeds past the wrap */
+
+.reviews__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1.5rem 0 0;
+  padding: 0.6rem 1.15rem;
+  border: 1px solid var(--line-dark);
+  border-radius: 999px;
+  font-size: 0.875rem;
+}
+.gmark { flex: 0 0 auto; }
+
+/* At 390px the badge breaks mid-phrase ("4.9 / average"); a slightly smaller
+   face and tighter gap keep it on one line. */
+@media (max-width: 30rem) {
+  .reviews__badge { font-size: 0.8125rem; gap: 0.45rem; padding: 0.55rem 0.9rem; }
+  .reviews__badge .stars { font-size: 0.8rem; letter-spacing: 0.06em; }
+}
+
 .revslider {
-  max-width: 46rem;
-  margin: clamp(2rem, 4vw, 3rem) auto 0;
+  margin-top: clamp(2.5rem, 5vw, 3.5rem);
   /* Horizontal drag is ours; vertical swipe must still scroll the page. */
   touch-action: pan-y;
 }
 
-/* The viewport clips the track; the track slides one full slide at a time. */
-.revslider__viewport { overflow: hidden; }
+/* Full-bleed viewport so the next card peeks in from the edge, as in the
+   reference design. The gutter keeps the first card aligned to the wrap. */
+.revslider__viewport { overflow: hidden; padding-inline: var(--gutter); }
 
 .revslider__track {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
-  /* Without JS the track is a plain column, so every review stays readable. */
-  flex-direction: column;
+  flex-wrap: wrap;                          /* no JS: a plain wrapping row */
   gap: 1rem;
 }
 
 .js .revslider__track {
-  flex-direction: row;
-  gap: 0;
-  align-items: stretch;
+  flex-wrap: nowrap;
   transition: transform 0.55s var(--ease);
+  will-change: transform;
 }
 
-.revslide { flex: 0 0 100%; min-width: 0; }
-.js .revslide { padding-inline: 2px; }
+.revslide { flex: 0 0 auto; width: min(21rem, 82vw); }
 
 .review {
   margin: 0;
   height: 100%;
-  padding: clamp(1.5rem, 3.5vw, 2.25rem);
-  background: var(--paper);
-  border: 1px solid var(--line);
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  background: var(--charcoal-2);
+  border: 1px solid var(--line-dark);
   border-radius: var(--radius);
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
 }
 
-.review__head { display: flex; align-items: center; gap: 0.8rem; }
-
-.review__avatar {
-  flex: 0 0 auto;
-  width: 2.75rem; height: 2.75rem;
-  display: grid; place-items: center;
-  border-radius: 50%;
-  background: var(--ink);
-  color: var(--btn-on-ink);
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  line-height: 1;
-}
-
+.review__head { display: flex; align-items: flex-start; gap: 1rem; }
 .review__author { font-weight: 500; margin: 0; }
-.review__meta   { margin: 0.1rem 0 0; font-size: 0.8125rem; color: var(--muted); }
-/* Pushes the Google mark to the far end of the header row. */
-.review__google { flex: 0 0 auto; margin-left: auto; }
+.review__meta   { margin: 0.15rem 0 0; font-size: 0.8125rem; color: var(--muted); }
+.review__rating { margin: 0; margin-left: auto; white-space: nowrap; }
 
-.review__rating { margin: 0; }
-/* The pale gold Google uses measures 2.2:1 on white. The brand accent is the
-   already-validated text-safe orange and keeps the stars on-brand. */
-.stars { color: var(--accent); letter-spacing: 0.12em; }
+/* Full-strength brand orange: the darkened text-safe accent is too dim here,
+   and Google's pale gold measures barely 2:1 on this ground. */
+.stars { color: var(--accent-full); letter-spacing: 0.1em; font-size: 0.9rem; }
 
 .review blockquote {
   margin: 0;
   font-size: 0.9375rem;
-  line-height: 1.7;
+  line-height: 1.65;
   color: var(--ink-soft);
+  /* Clamped to four lines so every card in the row is the same height. The
+     full text is a click away on Google. */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .revslider__controls {
-  display: flex;
+  display: none;
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  margin-top: 1.5rem;
+  margin-top: clamp(1.75rem, 4vw, 2.5rem);
 }
+.js .revslider__controls { display: flex; }
 
 .revslider__nav {
-  width: 2.75rem; height: 2.75rem;      /* 44px - meets WCAG 2.5.8 target size */
-  border: 1px solid var(--line);
+  width: 2.75rem; height: 2.75rem;          /* 44px - meets WCAG 2.5.8 */
+  border: 1px solid var(--line-dark);
   border-radius: 50%;
   background: transparent;
-  color: inherit;                        /* buttons do not inherit colour on their own */
+  color: inherit;                           /* buttons do not inherit colour */
   cursor: pointer;
   font-size: 1rem;
   line-height: 1;
   transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
 }
-.revslider__nav:hover { border-color: var(--ink); background: var(--ivory); }
+.revslider__nav:hover { border-color: var(--ink); background: rgba(255,255,255,0.06); }
 
 .revslider__dots { display: flex; gap: 0.5rem; align-items: center; }
 
 .revslider__dots button {
-  width: 1.5rem; height: 1.5rem;         /* 24px - the inline minimum for 2.5.8 */
-  padding: 0;
-  border: 0;
-  background: transparent;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
+  width: 1.5rem; height: 1.5rem;            /* 24px - inline minimum for 2.5.8 */
+  padding: 0; border: 0; background: transparent; cursor: pointer;
+  display: grid; place-items: center;
 }
 /* The visible dot is drawn inside the larger, easier-to-hit button. */
 .revslider__dots button::before {
   content: "";
   width: 7px; height: 7px;
   border-radius: 50%;
-  background: var(--line);
+  background: var(--line-dark);
   transition: background 0.3s var(--ease), transform 0.3s var(--ease);
 }
-.revslider__dots button[aria-pressed="true"]::before { background: var(--ink); transform: scale(1.25); }
+.revslider__dots button[aria-pressed="true"]::before { background: var(--ink); transform: scale(1.3); }
 
-/* Controls are pure enhancement - without JS the track already shows everything. */
-.revslider__controls { display: none; }
-.js .revslider__controls { display: flex; }
+.reviews__link { margin-top: clamp(1.75rem, 4vw, 2.5rem); }
+.reviews__link a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9375rem;
+}
 
 @media (prefers-reduced-motion: reduce) {
   .js .revslider__track { transition: none; }

@@ -9,10 +9,14 @@
       "Text is verbatim, including the reviewers' own typos and punctuation. Editing a review's wording would misrepresent what the person actually wrote.",
       "The section does not render at all while this list is empty, so the homepage never shows a placeholder or an invented review.",
       "No Review or AggregateRating schema is emitted. Google's structured-data policy disallows rich results for self-serving reviews (a business marking up reviews about itself), so the markup would earn nothing and risks a manual action.",
-      "Array order is display order, not chronological. Reorder freely."
+      "Array order is display order, not chronological. Reorder freely.",
+      "The badge shows the full profile stats (all 195 reviews, 4.9 average); the cards show only five-star reviews. Both statements are true and are worded so they cannot be read as '195 five-star reviews'."
     ],
     "datesNote": "Google showed these as relative ages ('7 months ago'). Converted to absolute months against 3 September 2026 so they do not go stale on the page. Accurate to within a month.",
-    "howToFill": "Add {\"author\":\"\",\"text\":\"\",\"date\":\"\",\"rating\":5} objects to \"reviews\" below."
+    "howToFill": "Add {\"author\":\"\",\"text\":\"\",\"date\":\"\",\"rating\":5} objects to \"reviews\" below.",
+    "reviewCount": 195,
+    "averageRating": 4.9,
+    "statsSource": "Supplied by Nishchay, the profile owner, on 3 September 2026. Could not be verified from here (Google Maps and Search are blocked by the egress proxy). These two numbers appear publicly on the homepage badge and the Google link, so keep them in sync with the real profile."
   },
   "reviews": [
     {
