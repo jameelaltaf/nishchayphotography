@@ -450,29 +450,6 @@ body.nav-open .site-header:not(.is-stuck) .nav__cta {
 .stats dt { font-family: var(--font-display); font-size: clamp(2.2rem, 4vw, 3.2rem); line-height: 1; color: var(--accent); }
 .stats dd { margin: 0.6rem 0 0; font-size: 0.76rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
 
-/* ---------- Testimonials ---------- */
-.quotes { position: relative; }
-.quote { display: none; text-align: center; max-width: 46rem; margin-inline: auto; }
-.quote.is-active { display: block; animation: fadeUp 0.6s var(--ease); }
-.quote blockquote { margin: 0; font-family: var(--font-display); font-size: clamp(1.4rem, 3vw, 2.15rem); line-height: 1.38; font-weight: 300; }
-.quote figcaption { margin-top: 1.75rem; font-size: 0.74rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); }
-.quotes__nav { display: flex; gap: 0.6rem; justify-content: center; margin-top: 2.5rem; }
-.quotes__nav button {
-  width: 34px; height: 24px; border: 0; padding: 0;
-  background: none; cursor: pointer; display: grid; align-items: center;
-}
-.quotes__nav button::before {
-  content: ""; display: block; height: 3px; width: 100%;
-  background: var(--line); transition: background 0.3s var(--ease);
-}
-.section--dark .quotes__nav button::before { background: var(--line-dark); }
-.quotes__nav button[aria-pressed="true"]::before { background: var(--accent); }
-@keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-
-/* ---------- Logo row ---------- */
-.logos { display: flex; flex-wrap: wrap; gap: clamp(1.5rem, 5vw, 4rem); align-items: center; justify-content: center; list-style: none; padding: 0; margin: 0; }
-.logos li { font-family: var(--font-display); font-size: clamp(1rem, 1.8vw, 1.35rem); letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); opacity: 0.8; }
-
 /* ---------- Accordion (FAQ) ---------- */
 .accordion { border-top: 1px solid var(--line); }
 .accordion__item { border-bottom: 1px solid var(--line); }
@@ -984,25 +961,44 @@ html:not(.js) .carousel3d__controls, html:not(.js) .carousel3d__hint { display: 
 }
 
 /* Full-bleed viewport so the next card peeks in from the edge, as in the
-   reference design. The gutter keeps the first card aligned to the wrap. */
-.revslider__viewport { overflow: hidden; padding-inline: var(--gutter); }
+   reference design. The gutter keeps the first card aligned to the wrap.
+   Scrollable by default: when the marquee is not running (reduced motion, or
+   no JS) this is the only way to reach the cards past the edge. */
+.revslider__viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-inline: var(--gutter);
+  scrollbar-width: thin;
+}
 
 .revslider__track {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
-  flex-wrap: wrap;                          /* no JS: a plain wrapping row */
+  flex-wrap: nowrap;
+  width: max-content;                       /* so the -50% shift is exact */
   gap: 1rem;
 }
 
-.js .revslider__track {
-  flex-wrap: nowrap;
-  transition: transform 0.55s var(--ease);
-  will-change: transform;
+.revslide { flex: 0 0 auto; width: min(21rem, 82vw); }
+
+/* The track holds exactly two copies of the card set, so shifting it by half
+   its width lands on an identical frame - the loop has no visible seam. */
+@keyframes reviews-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-.revslide { flex: 0 0 auto; width: min(21rem, 82vw); }
+.js .revslider.is-marquee .revslider__viewport { overflow: hidden; }
+.js .revslider.is-marquee .revslider__track {
+  animation: reviews-marquee var(--marquee-duration, 60s) linear infinite;
+}
+
+/* Pause for anyone reading: pointer, keyboard focus, or the button. */
+.js .revslider.is-marquee:hover .revslider__track,
+.js .revslider.is-marquee:focus-within .revslider__track,
+.js .revslider.is-paused .revslider__track { animation-play-state: paused; }
 
 .review {
   margin: 0;
@@ -1022,7 +1018,7 @@ html:not(.js) .carousel3d__controls, html:not(.js) .carousel3d__hint { display: 
 .review__rating { margin: 0; margin-left: auto; white-space: nowrap; }
 
 /* Full-strength brand orange: the darkened text-safe accent is too dim here,
-   and Google's pale gold measures barely 2:1 on this ground. */
+   and Google's own gold measures barely 2:1 on this ground. */
 .stars { color: var(--accent-full); letter-spacing: 0.1em; font-size: 0.9rem; }
 
 .review blockquote {
@@ -1039,43 +1035,43 @@ html:not(.js) .carousel3d__controls, html:not(.js) .carousel3d__hint { display: 
 }
 
 .revslider__controls {
-  display: none;
-  align-items: center;
+  display: flex;
   justify-content: center;
-  gap: 1rem;
   margin-top: clamp(1.75rem, 4vw, 2.5rem);
 }
-.js .revslider__controls { display: flex; }
 
-.revslider__nav {
-  width: 2.75rem; height: 2.75rem;          /* 44px - meets WCAG 2.5.8 */
+/* WCAG 2.2.2: motion that runs for more than five seconds needs a mechanism
+   to stop it, and hovering does not help a keyboard user. */
+.revslider__pause {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;                      /* 44px - meets WCAG 2.5.8 */
+  padding: 0.4rem 1rem;
   border: 1px solid var(--line-dark);
-  border-radius: 50%;
+  border-radius: 999px;
   background: transparent;
   color: inherit;                           /* buttons do not inherit colour */
   cursor: pointer;
-  font-size: 1rem;
-  line-height: 1;
+  font: inherit;
+  font-size: 0.8125rem;
   transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
 }
-.revslider__nav:hover { border-color: var(--ink); background: rgba(255,255,255,0.06); }
+.revslider__pause:hover { border-color: var(--ink); background: rgba(255,255,255,0.06); }
 
-.revslider__dots { display: flex; gap: 0.5rem; align-items: center; }
-
-.revslider__dots button {
-  width: 1.5rem; height: 1.5rem;            /* 24px - inline minimum for 2.5.8 */
-  padding: 0; border: 0; background: transparent; cursor: pointer;
-  display: grid; place-items: center;
+/* Two bars for pause; a triangle once paused, meaning "resume". */
+.revslider__icon {
+  width: 0.6rem; height: 0.7rem;
+  border-left: 3px solid currentColor;
+  border-right: 3px solid currentColor;
 }
-/* The visible dot is drawn inside the larger, easier-to-hit button. */
-.revslider__dots button::before {
-  content: "";
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--line-dark);
-  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+.revslider__pause[aria-pressed="true"] .revslider__icon {
+  width: 0; height: 0;
+  border: 0;
+  border-left: 8px solid currentColor;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
 }
-.revslider__dots button[aria-pressed="true"]::before { background: var(--ink); transform: scale(1.3); }
 
 .reviews__link { margin-top: clamp(1.75rem, 4vw, 2.5rem); }
 .reviews__link a {

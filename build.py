@@ -264,8 +264,8 @@ def render_reviews():
     else:
         badge_text = "Reviews on Google"
 
-    slides, dots = [], []
-    for i, r in enumerate(reviews):
+    slides = []
+    for r in reviews:
         slides.append(f"""          <li class="revslide">
             <figure class="review">
               <div class="review__head">
@@ -278,8 +278,6 @@ def render_reviews():
               <blockquote>{esc(r['text'])}</blockquote>
             </figure>
           </li>""")
-        dots.append(f'          <button type="button" data-review-dot aria-pressed="{"true" if i == 0 else "false"}">'
-                    f'<span class="hp">Show review {i + 1}, {esc(r["author"])}</span></button>')
 
     link = ""
     if profile_url:
@@ -289,7 +287,6 @@ def render_reviews():
                 f'<span aria-hidden="true">&#8599;</span></a></p>')
 
     joined = "\n".join(slides)
-    joined_dots = "\n".join(dots)
 
     return f"""<section class="section section--dark reviews-band" id="reviews">
   <div class="wrap">
@@ -312,14 +309,11 @@ def render_reviews():
 
     <div class="wrap">
       <div class="revslider__controls">
-        <button class="revslider__nav" type="button" data-reviews-prev aria-label="Previous review">&#8592;</button>
-        <div class="revslider__dots" data-reviews-dots role="group" aria-label="Choose a review">
-{joined_dots}
-        </div>
-        <button class="revslider__nav" type="button" data-reviews-next aria-label="Next review">&#8594;</button>
-      </div>
-
-      <p class="hp" data-reviews-status role="status" aria-live="polite"></p>{link}
+        <button class="revslider__pause" type="button" data-reviews-pause aria-pressed="false" hidden>
+          <span class="revslider__icon" aria-hidden="true"></span>
+          <span data-reviews-pause-label>Pause reviews</span>
+        </button>
+      </div>{link}
     </div>
   </div>
 </section>"""
