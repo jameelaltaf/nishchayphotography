@@ -198,164 +198,55 @@
     document.addEventListener('gallery:filtered', collect);
   })();
 
-  /* ---------------------------------------------------------- testimonials */
-  (function quotes() {
-    var root = document.querySelector('[data-quotes]');
-    if (!root) return;
-    var slides = root.querySelectorAll('.quote');
-    var dots = root.querySelectorAll('[data-quote-dot]');
-    if (slides.length < 2) return;
-    var current = 0;
-    var timer = null;
-
-    function go(i) {
-      current = (i + slides.length) % slides.length;
-      Array.prototype.forEach.call(slides, function (s, n) { s.classList.toggle('is-active', n === current); });
-      Array.prototype.forEach.call(dots, function (d, n) { d.setAttribute('aria-pressed', String(n === current)); });
-    }
-
-    function start() {
-      if (reduceMotion) return;
-      stop();
-      timer = setInterval(function () { go(current + 1); }, 7000);
-    }
-    function stop() { if (timer) clearInterval(timer); }
-
-    Array.prototype.forEach.call(dots, function (dot, n) {
-      dot.addEventListener('click', function () { go(n); start(); });
-    });
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
-    root.addEventListener('focusin', stop);
-
-    go(0);
-    start();
-  })();
-
-  /* ------------------------------------------------- google reviews slider */
+  /* ------------------------------------------------ google reviews marquee */
   (function reviews() {
     var root = document.querySelector('[data-reviews]');
     if (!root) return;
-    var viewport = root.querySelector('.revslider__viewport');
     var track = root.querySelector('[data-reviews-track]');
-    var dots = root.querySelectorAll('[data-review-dot]');
-    var status = root.querySelector('[data-reviews-status]');
-    var prevBtn = root.querySelector('[data-reviews-prev]');
-    var nextBtn = root.querySelector('[data-reviews-next]');
-    if (!track || !viewport) return;
+    var pauseBtn = root.querySelector('[data-reviews-pause]');
+    var pauseLabel = root.querySelector('[data-reviews-pause-label]');
+    if (!track) return;
 
     var originals = Array.prototype.slice.call(track.children);
     var n = originals.length;
     if (n < 2) return;
 
-    // A second copy of every card makes the wrap seamless: sliding onto clone
-    // n looks identical to card 0, so we can snap back with no visible jump.
+    // Anyone who has asked for less motion gets a static, hand-scrollable row
+    // instead: no animation, and no duplicate cards cluttering the DOM.
+    if (reduceMotion) return;
+
+    // A second copy of every card makes the loop seamless - shifting the track
+    // by half its width lands on an identical frame.
     originals.forEach(function (li) {
       var clone = li.cloneNode(true);
       clone.setAttribute('aria-hidden', 'true');
       clone.setAttribute('data-clone', '');
-      // Clones must never be reachable by keyboard or screen readers.
       Array.prototype.forEach.call(clone.querySelectorAll('a, button'), function (el) {
         el.setAttribute('tabindex', '-1');
       });
       track.appendChild(clone);
     });
 
-    var index = 0;
-    var timer = null;
+    // Fixed seconds per card, so the speed reads the same however many
+    // reviews are published.
+    root.style.setProperty('--marquee-duration', (n * 9) + 's');
+    root.classList.add('is-marquee');
 
-    function stepPx() {
-      var first = track.children[0];
-      var styles = window.getComputedStyle(track);
-      var gap = parseFloat(styles.columnGap || styles.gap) || 0;
-      return first.getBoundingClientRect().width + gap;
-    }
-
-    function paint(animate) {
-      track.style.transition = animate === false ? 'none' : '';
-      track.style.transform = 'translateX(' + (-index * stepPx()) + 'px)';
-      var active = ((index % n) + n) % n;
-      Array.prototype.forEach.call(dots, function (d, i) {
-        d.setAttribute('aria-pressed', String(i === active));
-      });
-      if (status) status.textContent = 'Review ' + (active + 1) + ' of ' + n;
-    }
-
-    function go(i) {
-      index = i;
-      paint(true);
-      if (index >= n) {
-        // Land on the clone, then silently rewind to the real card behind it.
-        window.setTimeout(function () { index = 0; paint(false); }, 600);
-      }
-    }
-
-    function back() {
-      if (index > 0) { go(index - 1); return; }
-      // Jump forward to the identical clone position, then animate backwards.
-      index = n;
-      paint(false);
-      window.requestAnimationFrame(function () {
-        window.requestAnimationFrame(function () { go(n - 1); });
+    if (pauseBtn) {
+      pauseBtn.hidden = false;
+      pauseBtn.addEventListener('click', function () {
+        var paused = root.classList.toggle('is-paused');
+        pauseBtn.setAttribute('aria-pressed', String(paused));
+        if (pauseLabel) pauseLabel.textContent = paused ? 'Play reviews' : 'Pause reviews';
       });
     }
 
-    function start() {
-      if (reduceMotion) return;
-      stop();
-      timer = window.setInterval(function () { go(index + 1); }, 5000);
-    }
-    function stop() { if (timer) { window.clearInterval(timer); timer = null; } }
-
-    Array.prototype.forEach.call(dots, function (dot, i) {
-      dot.addEventListener('click', function () { go(i); start(); });
-    });
-    if (nextBtn) nextBtn.addEventListener('click', function () { go(index + 1); start(); });
-    if (prevBtn) prevBtn.addEventListener('click', function () { back(); start(); });
-
-    root.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowLeft') { back(); start(); }
-      else if (e.key === 'ArrowRight') { go(index + 1); start(); }
-    });
-
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
-    root.addEventListener('focusin', stop);
-    root.addEventListener('focusout', function (e) {
-      if (!root.contains(e.relatedTarget)) start();
-    });
-    // Autoplay while the tab is hidden is wasted work.
+    // Animating off-screen is wasted work.
     document.addEventListener('visibilitychange', function () {
-      if (document.hidden) stop(); else start();
+      root.classList.toggle('is-hidden-tab', document.hidden);
+      track.style.animationPlayState =
+        (document.hidden || root.classList.contains('is-paused')) ? 'paused' : '';
     });
-    // Card width is viewport-relative, so the offset has to be recomputed.
-    window.addEventListener('resize', function () { paint(false); });
-
-    // Horizontal drag advances the slider; vertical drag must still scroll the
-    // page, so the gesture is axis-locked before it takes over.
-    var x0 = 0, y0 = 0, axis = null, dragging = false;
-    root.addEventListener('pointerdown', function (e) {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      x0 = e.clientX; y0 = e.clientY; axis = null; dragging = true; stop();
-    });
-    root.addEventListener('pointermove', function (e) {
-      if (!dragging || axis) return;
-      var dx = e.clientX - x0, dy = e.clientY - y0;
-      if (Math.abs(dx) > 6 || Math.abs(dy) > 6) {
-        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-      }
-    });
-    root.addEventListener('pointerup', function (e) {
-      if (!dragging) return;
-      var dx = e.clientX - x0;
-      if (axis === 'x' && Math.abs(dx) > 40) {
-        if (dx < 0) go(index + 1); else back();
-      }
-      dragging = false; axis = null; start();
-    });
-
-    paint(false);
-    start();
   })();
 
   /* ------------------------------------------------------------- accordion */
