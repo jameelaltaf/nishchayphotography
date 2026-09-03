@@ -232,6 +232,87 @@
     start();
   })();
 
+  /* ------------------------------------------------- google reviews slider */
+  (function reviews() {
+    var root = document.querySelector('[data-reviews]');
+    if (!root) return;
+    var track = root.querySelector('[data-reviews-track]');
+    var slides = root.querySelectorAll('[data-review-slide]');
+    var dots = root.querySelectorAll('[data-review-dot]');
+    var status = root.querySelector('[data-reviews-status]');
+    var prev = root.querySelector('[data-reviews-prev]');
+    var next = root.querySelector('[data-reviews-next]');
+    if (!track || slides.length < 2) return;
+
+    var current = 0;
+    var timer = null;
+
+    function go(i) {
+      current = (i + slides.length) % slides.length;
+      track.style.transform = 'translateX(' + (-current * 100) + '%)';
+      Array.prototype.forEach.call(slides, function (s, n) {
+        // Hide the off-screen slides from assistive tech and from tab order.
+        s.setAttribute('aria-hidden', String(n !== current));
+      });
+      Array.prototype.forEach.call(dots, function (d, n) {
+        d.setAttribute('aria-pressed', String(n === current));
+      });
+      if (status) status.textContent = 'Review ' + (current + 1) + ' of ' + slides.length;
+    }
+
+    function start() {
+      if (reduceMotion) return;
+      stop();
+      timer = setInterval(function () { go(current + 1); }, 7000);
+    }
+    function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+    Array.prototype.forEach.call(dots, function (dot, n) {
+      dot.addEventListener('click', function () { go(n); start(); });
+    });
+    if (prev) prev.addEventListener('click', function () { go(current - 1); start(); });
+    if (next) next.addEventListener('click', function () { go(current + 1); start(); });
+
+    root.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') { go(current - 1); start(); }
+      else if (e.key === 'ArrowRight') { go(current + 1); start(); }
+    });
+
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    root.addEventListener('focusin', stop);
+    root.addEventListener('focusout', function (e) {
+      if (!root.contains(e.relatedTarget)) start();
+    });
+    // Autoplay while the section is off-screen is wasted work.
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) stop(); else start();
+    });
+
+    // Horizontal drag advances the slider; vertical drag must still scroll the
+    // page, so the gesture is axis-locked before it takes over.
+    var x0 = 0, y0 = 0, axis = null;
+    root.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) return;
+      x0 = e.clientX; y0 = e.clientY; axis = null; stop();
+    });
+    root.addEventListener('pointermove', function (e) {
+      if (!x0 && !y0) return;
+      var dx = e.clientX - x0, dy = e.clientY - y0;
+      if (!axis && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+        axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      }
+    });
+    root.addEventListener('pointerup', function (e) {
+      var dx = e.clientX - x0;
+      if (axis === 'x' && Math.abs(dx) > 40) go(current + (dx < 0 ? 1 : -1));
+      x0 = 0; y0 = 0; axis = null; start();
+    });
+
+    go(0);
+    start();
+  })();
+
   /* ------------------------------------------------------------- accordion */
   (function accordion() {
     var triggers = document.querySelectorAll('.accordion__trigger');
